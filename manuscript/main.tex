@@ -1,0 +1,154 @@
+\documentclass[journal=nalefd,manuscript=letter,layout=traditional]{achemso}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{siunitx}
+\usepackage{booktabs}
+\usepackage{bm}
+\usepackage{xr}
+\usepackage[hidelinks]{hyperref}
+% Figure references.  Every figure number in this project is produced by
+% \ref, never typed by hand: \ref{fig:...} for figures of this document, and
+% \ref{SI-fig:...} for figures of the other one, whose labels the xr package reads
+% out of its .aux.  Panel letters are appended literally, e.g.
+% Figure~\ref{fig:xpcs}a.  `make papers` compiles si -> main -> si so both
+% directions resolve on a clean tree; `make check` reports any that did not.
+% \externaldocument[SI-]{build/si}   % re-enable when si.tex exists
+
+% Line numbers, for the reviewers' convenience.  lineno does not see amsmath's
+% display environments by itself, so a numbered equation would silently break
+% the count; \linenoAms wraps them in \linenomath, which is the standard fix.
+\usepackage[mathlines]{lineno}
+\linenumbers
+\newcommand*\linenoAms[1]{%
+  \expandafter\let\csname old#1\expandafter\endcsname\csname #1\endcsname
+  \expandafter\let\csname oldend#1\expandafter\endcsname\csname end#1\endcsname
+  \renewenvironment{#1}{\linenomath\csname old#1\endcsname}%
+                       {\csname oldend#1\endcsname\endlinenomath}}
+\AtBeginDocument{\linenoAms{equation}\linenoAms{equation*}%
+                 \linenoAms{align}\linenoAms{align*}}
+
+\setkeys{acs}{articletitle=true}
+\SectionNumbersOff
+\graphicspath{{figures/}}
+\sisetup{detect-all=true,range-phrase=--,range-units=single}
+
+\newcommand{\VPAVG}{(VPAVG)$_{30}$}
+\newcommand{\Ainv}{\text{\AA}$^{-1}$}
+
+% Data-derived figures are drawn at exactly the ACS column widths (3.33 in
+% single, 7.0 in double), so they are included at NATURAL SIZE -- no width=
+% scaling -- and the 8 pt lettering in the file is 8 pt on the page.  A
+% double-column figure is wider than this class's 6.52 in text block, so
+% \makebox lets it overhang symmetrically into the margins instead of being
+% shrunk.  Setup.pdf is the approved original artwork and is not on that grid,
+% so it keeps width=\linewidth.
+\newcommand{\acsfig}[1]{\makebox[\linewidth][c]{\includegraphics{#1}}}
+
+\title{Thermally Reversible Beta-Sheet-like Ordering Controls Gelation in Elastin-like Polypeptides}
+
+\author{Doga Ozgulbas}
+\affiliation{Data Science and Learning Division, Argonne National Laboratory, Lemont, Illinois 60439, United States}
+\author{Miaoqi Chu}
+\affiliation{X-ray Science Division, Argonne National Laboratory, Lemont, Illinois 60439, United States}
+\author{Alex Lavens}
+\affiliation{X-ray Science Division, Argonne National Laboratory, Lemont, Illinois 60439, United States}
+\author{Nicholas Marks}
+\affiliation{Data Science and Learning Division, Argonne National Laboratory, Lemont, Illinois 60439, United States}
+\author{Ming Du}
+\affiliation{X-ray Science Division, Argonne National Laboratory, Lemont, Illinois 60439, United States}
+\author{Xiaobing Zuo}
+\affiliation{X-ray Science Division, Argonne National Laboratory, Lemont, Illinois 60439, United States}
+\author{Michael Irvin}
+\affiliation{Data Science and Learning Division, Argonne National Laboratory, Lemont, Illinois 60439, United States}
+\author{Heng Ma}
+\affiliation{Data Science and Learning Division, Argonne National Laboratory, Lemont, Illinois 60439, United States}
+\author{Soenke Seifert}
+\affiliation{X-ray Science Division, Argonne National Laboratory, Lemont, Illinois 60439, United States}
+\author{Byeongdu Lee}
+\affiliation{X-ray Science Division, Argonne National Laboratory, Lemont, Illinois 60439, United States}
+\author{Rafael Vescovi}
+\affiliation{Data Science and Learning Division, Argonne National Laboratory, Lemont, Illinois 60439, United States}
+\author{Ian Foster}
+\affiliation{Data Science and Learning Division, Argonne National Laboratory, Lemont, Illinois 60439, United States}
+\author{Victor Mateevitsi}
+\affiliation{Argonne Leadership Computing Facility, Argonne National Laboratory, Lemont, Illinois 60439, United States}
+\author{Don Jensen Jr.}
+\affiliation{X-ray Science Division, Argonne National Laboratory, Lemont, Illinois 60439, United States}
+\author{Chase Akins}
+\affiliation{Biosciences Division, Argonne National Laboratory, Lemont, Illinois 60439, United States}
+\author{Arvind Ramanathan}
+\email{ramanathana@anl.gov}
+\affiliation{Data Science and Learning Division, Argonne National Laboratory, Lemont, Illinois 60439, United States}
+\author{Gyorgy Babnigg}
+\email{gbabnigg@anl.gov}
+\affiliation{Biosciences Division, Argonne National Laboratory, Lemont, Illinois 60439, United States}
+\author{Qingteng Zhang}
+\email{qzhang234@anl.gov}
+\affiliation{X-ray Science Division, Argonne National Laboratory, Lemont, Illinois 60439, United States}
+
+\begin{document}
+
+\begin{abstract}
+Amyloid-like $\beta$-sheet packing spans a wide range of stabilities, from the
+kinetically persistent cores of pathological fibrils to contacts that come apart
+again, and where a sequence falls in that range decides whether it can serve as a
+switchable material. Here, temperature-dependent small- and wide-angle X-ray
+scattering of the sequence-defined elastin-like polypeptide \VPAVG{} resolves a
+reversible transition between a dispersed low-temperature state and a hierarchical
+high-temperature assembly carrying $\beta$-sheet-like peaks at $Q=1.38$ and
+$0.72$~\Ainv{} that vanish on cooling. Chain length decides whether the gel
+returns: \VPAVG{} recovers its low-temperature profile through repeated cycling
+while the ten-repeat construct does not. The reversible case therefore places
+amyloid-like local order in the role of a physical junction rather than a
+terminal aggregate.
+\end{abstract}
+
+\section*{Introduction}
+
+Amyloid-like $\beta$-sheet ordering occupies an unusual position in protein science and polymer materials. Pathological amyloid fibrils formed by proteins and peptides that share no sequence homology are associated with Alzheimer’s disease,\cite{Masters1985-pnas} Parkinson’s disease,\cite{Serpell2000-pnas} type II diabetes,\cite{Cooper1987-pnas} prion diseases,\cite{Pan1993-pnas} and systemic light-chain amyloidosis.\cite{Radamaker2019-ncomms} Many amyloid fibrils are kinetically persistent because extended hydrogen-bonded sheets are reinforced by tightly packed steric-zipper interfaces.\cite{Sawaya2007-nature} Yet amyloid-like order is not intrinsically pathological: functional amyloids store mammalian peptide hormones in pituitary secretory granules\cite{Maji2009-science} and build the extracellular matrix of bacterial biofilms,\cite{Chapman2002-science} and related assemblies are increasingly used as mechanically robust biomaterials.\cite{Knowles2016-am} What differs across these systems is not whether $\beta$-sheet-like order forms but how long it lasts: hormone granules disassemble to release functional monomer, whereas steric-zipper cores are far more persistent. Amyloid-like packing therefore spans a wide range of stabilities rather than committing a sequence to one permanent structure,\cite{Palmadottir2025-bpr} and where a sequence falls in that range is a materials-design variable.
+
+Reversible $\beta$-sheet-like contacts are attractive as candidate physical junctions because backbone hydrogen bonding can stabilize locally ordered assemblies, whereas hydrated or weakly packed interfaces can remain dynamic or reversible.\cite{Kato2012-cell,Hughes2018-science,Luo2018-nsmb,Palmadottir2025-bpr} Elastin-like polypeptides (ELPs) are well suited to test this possibility because their sequence, molecular weight, and lower critical solution temperature (LCST) behavior can be programmed recombinantly.\cite{Meyer2004-zb,Amiram2011-la,Quiroz2015-mh,Varanko2020-ek,Saha2020-jg} Above the LCST, ELPs undergo hydrophobic desolvation and can form coacervates or hierarchical assemblies depending on sequence, concentration, and thermal history.\cite{Varanko2020-ek,Saha2020-jg,Sing2017-zq} In particular, alanine-containing ELPs can form stiff, thermoresponsive gels through arrested phase separation.\cite{Glassman2015-cw,Glassman2016-pq} Although these studies establish the arrested state from time-averaged scattering and rheology, how the assembly evolves toward arrest remains elusive.
+
+\section*{Results and Discussion}
+
+Figure~\ref{fig:static} establishes the low- and high-temperature structures and their reversibility. Two aliquots from the same stock were measured at APS 12-ID-B by simultaneous SAXS/WAXS at \SI{13.3}{\kilo\electronvolt}.\cite{APS12IDB,Xu2022-12IDB,Zheng2022-12IDB} The ``Measurement'' aliquot had undergone more than 10 heating/cooling cycles; the ``Reference'' aliquot had stayed at \SI{4}{\degreeCelsius}. At \SI{10}{\degreeCelsius} the two overlap, and a Guinier fit to the Reference gives an apparent $R_g=22.65\pm0.50$~\AA{} (SI Appendix), a dispersed state with no mesoscale aggregates down to $Q=0.0081$~\Ainv, which corresponds to structures below approximately \SI{78}{\nano\meter}. At \SI{30}{\degreeCelsius}, both aliquots reproducibly develop an approximate $I(Q)\propto Q^{-3.2}$ response at low $Q$ (slopes $-3.17$ and $-3.15$ over $0.012<Q<0.040$~\Ainv). Both also develop the same pair of high-$Q$ features, at $Q=1.38$ and $0.72$~\Ainv{} in the Reference and 1.36 and 0.74~\Ainv{} in the Measurement. The cycled aliquot alone makes the point: it still develops both peaks at \SI{30}{\degreeCelsius} and shows neither at \SI{10}{\degreeCelsius}. A more direct test at 8-ID-I took a single aliquot through seven consecutive \SIrange{6}{34}{\degreeCelsius} cycles, heated at \SI{1}{\degreeCelsius\per\minute} (SI Appendix). Across the seven cycles the \SI{6}{\degreeCelsius} profile recovers to within a 9\% relative standard deviation with no systematic drift, and at \SI{33.8}{\degreeCelsius} the correlation function stays close to $1+\beta$ in every cycle, the signature of an arrested state. The sample therefore assembled and arrested on every heating and returned to the same low-temperature state on every cooling (SI Appendix). Video~S1 independently shows recovery of optical transparency after cooling.
+
+\begin{figure}[htbp]
+  \centering
+  \acsfig{Figure1_SAXS_WAXS.pdf}
+  \caption{Temperature-dependent structure and reversibility of \VPAVG. At \SI{10}{\degreeCelsius}, the Measurement and Reference profiles overlap and the Reference data give an apparent $R_g=22.65\pm0.50$~\AA{} (SI Appendix). Heating produces an approximate $Q^{-3.2}$ low-$Q$ response and peaks at $Q=1.38$ and $0.72$~\Ainv, corresponding to real-space spacings of approximately 4.5 and 8.8~\AA, respectively. The dashed line is an unweighted power-law fit to the Reference profile at \SI{30}{\degreeCelsius} over $0.012<Q<0.040$~\Ainv. Inset: the high-$Q$ region of that same profile (open circles, same arbitrary intensity units as the main panel); red curves are independent Gaussian-plus-linear-background fits over $0.48<Q<1.00$ and $1.18<Q<1.70$~\Ainv, and the red dashed lines and labels mark the fitted peak centers. The recovery and reproducible re-formation of these signatures demonstrate a thermally reversible structural transition within experimental sensitivity.}
+  \label{fig:static}
+\end{figure}
+
+The two reciprocal-space regimes describe a hierarchical assembly. Power-law small-angle scattering signifies density heterogeneity extending across the probed interval rather than a single resolved structural scale.\cite{Teixeira1988-jac} Related gel-forming ELPs exhibit disordered bicontinuous or fractal protein-rich networks produced by arrested phase separation.\cite{Glassman2015-cw,Glassman2016-pq} The 4.5 and 8.8~\AA{} spacings are compatible with strand-to-strand and sheet-to-sheet packing in cross-$\beta$-like assemblies, whose reflections are reported at approximately 4.8~\AA{} along the fibril direction and between 8 and 11~\AA{} across it.\cite{Sawaya2007-nature,Sunde1997-jmb} Both features are broad and exhibit full widths at half maximum of 0.25 and 0.34~\Ainv{} (correlation lengths $2\pi/\Delta Q$ of only about 25 and 19~\AA), so the ordering extends over a few repeat spacings rather than forming extended cross-$\beta$ crystallites. Their concurrent appearance with the low-$Q$ response establishes coexistence of local ordered contacts and mesoscale density heterogeneity. The disappearance of the peaks on cooling identifies thermally labile $\beta$-sheet-like associations that are plausible, rather than uniquely established, physical junctions.
+
+% ---------------------------------------------------------------------------
+% TO BE WRITTEN once the 28 Oct / Monday correlations are reduced:
+%   * the chain-length ramp paragraph, (VPAVG)10 / 20 / 30, Figure 2
+%   * the seven-cycle repeatability paragraph, Figure 3
+%   * the irreversibility of (VPAVG)10, and what it says about chain length
+%   * the automated cell assembly, Video S2 and Figure S1b
+% See MONDAY_TODO.md.
+% ---------------------------------------------------------------------------
+
+\section*{Materials and Methods}
+To be assembled from the pre-split Letter (tag \texttt{pre-split} in
+PubCode-2021-IDPP): the 12-ID-B paragraph, the 8-ID-I cell and beam description,
+and the robotic cell-assembly method.
+
+\section*{Supporting Information}
+Recombinant synthesis and purification; sample environments and the automated
+cell assembly; SAXS/WAXS calibration and merging; Guinier analysis; chain-length
+ramps; seven-cycle thermal repeatability; irreversibility of the ten-repeat
+construct; videos of the reversible transition and of the robotic assembly~(PDF,
+MP4).
+
+\section*{Data and Code Availability}
+Reduced data and analysis code are at
+\url{https://github.com/qzhang234/PubCode-2021-IDPP-Reversibility}.
+
+\bibliography{reference}
+
+\end{document}

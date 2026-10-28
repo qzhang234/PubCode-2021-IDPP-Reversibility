@@ -1,0 +1,18 @@
+# Claude Code session state
+.claude/
+.ipynb_checkpoints/
+
+# LaTeX aux; the finished PDF is committed
+manuscript/build/*.aux
+manuscript/build/*.log
+manuscript/build/*.out
+manuscript/build/*.bbl
+manuscript/build/*.blg
+manuscript/build/*.toc
+
+__pycache__/
+*.py[cod]
+
+# 46 MB run log of the 28 Oct metadata repair: provenance, not data.
+# The summary that matters is in MONDAY_TODO.md section 5.
+analysis/SAXPCS_8id/dx_restore_manifest_2021-2.csv
