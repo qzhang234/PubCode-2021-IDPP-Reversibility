@@ -32,13 +32,29 @@ The 28 Oct run stopped at its own 11:00 deadline having done **12,539 of
 chunks**, and the boost log carries **26 `MemoryError`**: four concurrent
 workers intermittently exhausted memory.
 
-**Do this:**
+**Already scheduled.** `at` job 6 on adamite fires at **01:00 Thu 29 Oct**,
+running `~/llps_2021-2_restore/at_job_pass2.sh` with `NWORKERS=3` and a 06:00
+safety deadline. `filelist.txt` in the run directory has been pointed at the
+699; the full 13,238 is preserved as `filelist_full_20261028.txt`. Expected
+~30 min, so check for the completion email, then:
+
+```bash
+ssh adamite 'atq'                     # should be empty by morning
+ssh adamite 'ls /gdata/s8id-dmdtn/2021-2/babnigg202107_2_nexus/reprocess_results/*_results.hdf | wc -l'
+# expect 13238; if short, a fresh missing_adamite.txt lists what is left
+```
+
+If it has to be re-run by hand:
 
 ```bash
 ssh adamite
 cd ~/llps_2021-2_restore
 NWORKERS=3 DEADLINE=$(date -d '2026-11-02 18:00' +%s) ./run_babnigg202107_2_correlations.sh
 ```
+
+Note the trap: a plain re-run with the ORIGINAL filelist redoes all 13,238
+(~6.9 h), because `-w` overwrites. Only the swapped filelist gives the 30-minute
+version.
 
 `NWORKERS=3` is the fix for the MemoryErrors; at 4 it loses about 1.3% of
 chunks. The script rebuilds its own file list and `-w` overwrites, so a plain
@@ -100,6 +116,10 @@ in old SI Figure S5 being labelled "H 02" and captioned (VPAVG)10.
 
 **Already in it**, carried over from the combined Letter:
 
+- The seven-cycle repeatability experiment and **Figure 2**, added 28 Oct.
+  `thermal_cycle.py` reproduces it from the 2022-1 `data/`, now owned by this
+  repository.
+
 - The amyloid introduction, both paragraphs. This is its proper home: in paper
   A it set up a structure-dynamics link the text then disclaimed four times;
   here it sets up the actual claim.
@@ -110,8 +130,6 @@ in old SI Figure S5 being labelled "H 02" and captioned (VPAVG)10.
 **Still to write** — marked with a comment block in `main.tex`:
 
 - [ ] the chain-length ramp paragraph and **Figure 2** (needs §1 and §2 above)
-- [ ] the seven-cycle repeatability paragraph and **Figure 3** — the data and
-      `thermal_cycle.py` are already copied into `analysis/SAXPCS_8id/`
 - [ ] irreversibility of (VPAVG)10, and what chain length does
 - [ ] **the automated cell assembly**: Video S2 and Figure S1b, from the AdvMat
       version. Requested for this build; the source is the AdvMat SI PDF, not
@@ -152,8 +170,11 @@ Introduction/Results/Discussion/Materials and Methods order.
       written the cover letter cites both as other people's prior work.
 - [ ] SI figure labels still read `fig:S5`..`fig:S11` for figures now numbered
       S2..S8. LaTeX numbers them correctly; only the source keys are stale.
-- [ ] Decide where the absolute-scale calibration figure lives. Both papers
-      need it; it is currently in A's SI and B cites nothing for it.
+- [x] The absolute-scale calibration figure now lives in **neither**. It was
+      the last thing in A reading the 2022-1 data, so it came out of A's SI and
+      A's two pointers cite this paper instead. **B must therefore show it**:
+      `saxpcs.py` still writes `FigureS5_Calibration.pdf` from `data/`, so add
+      it to B's SI when `si.tex` is written.
 - [ ] Still open from the audit: `SOURCE_DATE_EPOCH` in the Makefile for
       byte-reproducible figures, and the main text's claim that the 2021-3
       loadings were "held at 6 C for more than 30 min, warmed to 20 C", which

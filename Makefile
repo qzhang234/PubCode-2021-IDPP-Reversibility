@@ -23,8 +23,11 @@ export TEXINPUTS := .:$(MS)/figures:$(ANA)/SAXS_12id:$(ANA)/SAXPCS_8id:$(ANA)/ra
 export BIBINPUTS := .:$(MS):$(BUILD):
 export MPLBACKEND := Agg
 
-F_12ID := $(ANA)/SAXS_12id/Figure1_SAXS_WAXS.pdf
-FIGURES := $(F_12ID)
+F_12ID  := $(ANA)/SAXS_12id/Figure1_SAXS_WAXS.pdf
+F_CYCLE := $(ANA)/SAXPCS_8id/Figure2_Thermal_Cycle.pdf
+XPCS_DATA := $(wildcard $(ANA)/SAXPCS_8id/data/*.hdf) \
+             $(ANA)/SAXPCS_8id/data/thermal_cycle_temperature.csv
+FIGURES := $(F_12ID) $(F_CYCLE)
 
 .PHONY: all figures papers check clean
 
@@ -39,6 +42,14 @@ figures: $(FIGURES)
 # explicit rather than silent.
 $(F_12ID): $(ANA)/SAXS_12id/Plot_12ID.py $(wildcard $(ANA)/SAXS_12id/reduced_data/*.csv) $(ANA)/common/acs_style.py
 	cd $(ANA)/SAXS_12id && $(PY) Plot_12ID.py && cp Figure2_SAXS_WAXS.pdf Figure1_SAXS_WAXS.pdf
+
+# thermal_cycle.py writes FigureS4_Thermal_Cycle.pdf, the name it had in the
+# combined Letter; this paper calls it Figure 2.  Renaming the output in the
+# script is a Monday job -- see MONDAY_TODO.md.
+$(F_CYCLE): $(ANA)/SAXPCS_8id/thermal_cycle.py $(ANA)/SAXPCS_8id/abs_xsec.py \
+            $(XPCS_DATA) $(ANA)/common/acs_style.py $(ANA)/SAXPCS_8id/xpcs_fit.py \
+            $(ANA)/SAXPCS_8id/nexus_read.py
+	cd $(ANA)/SAXPCS_8id && $(PY) thermal_cycle.py && mv FigureS4_Thermal_Cycle.pdf Figure2_Thermal_Cycle.pdf
 
 define compile
 	@mkdir -p $(BUILD)
