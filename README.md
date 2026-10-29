@@ -18,8 +18,8 @@ beamline storage, `SAXPCS_8id/restore_dx_metadata_2021-2.py` and
 `ramps/reduce_ramps.py`, produced those committed files and are kept for
 provenance; `make figures` never runs them.
 
-**This paper is mid-rebuild.** `MONDAY_TODO.md` is the authoritative list of
-what exists, what does not, and what has to happen next. Read it first.
+**This paper is mid-rebuild.** `ACTION_ITEMS.md` is the authoritative list of
+what exists, what does not, and what to measure next. Read it first.
 
 ## Layout
 
