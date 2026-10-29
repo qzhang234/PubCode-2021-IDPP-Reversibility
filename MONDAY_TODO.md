@@ -116,8 +116,11 @@ in old SI Figure S5 being labelled "H 02" and captioned (VPAVG)10.
 - `Plot_12ID.py` still writes `Figure2_SAXS_WAXS.pdf`; the Makefile copies it
   to `Figure1_SAXS_WAXS.pdf`. Rename the output in the script and drop the copy.
 - `dx_restore_manifest_2021-2.csv` is 46 MB. Gitignore it and keep a summary.
-- `Archive/` is 644 MB of provenance. Decide whether it belongs in the
-  published repo or only locally.
+- [x] `Archive/` is untracked as of 29 Oct: 647 MB of pre-split provenance
+      that nothing live reads, kept on local disk only. Note that untracking
+      does not shrink an existing clone -- the objects stay in the history. If
+      the published repo has to be small, that needs a history rewrite, which
+      has deliberately not been done.
 
 ---
 

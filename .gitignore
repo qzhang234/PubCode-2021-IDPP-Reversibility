@@ -16,3 +16,9 @@ __pycache__/
 # 46 MB run log of the 28 Oct metadata repair: provenance, not data.
 # The summary that matters is in MONDAY_TODO.md section 5.
 analysis/SAXPCS_8id/dx_restore_manifest_2021-2.csv
+
+# Pre-split provenance: the PRL-era analysis (Old/), the ancestor of the
+# current scripts (New/) and an earlier ACS submission of the combined paper
+# (Overleaf/).  647 MB, and nothing live reads it -- verified by renaming it
+# away and rebuilding every figure from scratch.  Kept on local disk only.
+Archive/

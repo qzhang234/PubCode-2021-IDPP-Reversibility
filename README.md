@@ -30,7 +30,6 @@ what exists, what does not, and what has to happen next. Read it first.
 | `analysis/SAXPCS_8id/` | the 2022-1 seven-cycle data and `thermal_cycle.py`; the 2021-2 metadata repair and correlation runner |
 | `analysis/ramps/` | the chain-length ramps: `reduce_ramps.py` (beamline-only), `plot_ramps.py` -> Figure 3, and the committed `data/` |
 | `analysis/common/` | `acs_style.py`, shared with the other repository |
-| `Archive/` | the pre-split analysis: `Old/` the PRL-era ramps, `New/` the ancestor of the current scripts, `Overleaf/` an earlier ACS submission of the combined paper |
 
 ## Samples
 
