@@ -16,3 +16,9 @@ __pycache__/
 # 46 MB run log of the 28 Oct metadata repair: provenance, not data.
 # The summary that matters is in MONDAY_TODO.md section 5.
 analysis/SAXPCS_8id/dx_restore_manifest_2021-2.csv
+
+# 100 MB of reduced ramp averages. Regenerate with:
+#   python analysis/ramps/reduce_ramps.py     (on a /gdata host)
+# The trace CSV is small and IS tracked, since the figures read it for the
+# per-bin temperatures.
+analysis/ramps/data/Average_*.hdf

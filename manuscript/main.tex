@@ -92,17 +92,19 @@
 
 \begin{abstract}
 Amyloid-like $\beta$-sheet packing spans a wide range of stabilities, from the
-kinetically persistent cores of pathological fibrils to contacts that come apart
-again, and where a sequence falls in that range decides whether it can serve as a
-switchable material. Here, temperature-dependent small- and wide-angle X-ray
-scattering of the sequence-defined elastin-like polypeptide \VPAVG{} resolves a
-reversible transition between a dispersed low-temperature state and a hierarchical
-high-temperature assembly carrying $\beta$-sheet-like peaks at $Q=1.38$ and
-$0.72$~\Ainv{} that vanish on cooling. Chain length decides whether the gel
-returns: \VPAVG{} recovers its low-temperature profile through repeated cycling
-while the ten-repeat construct does not. The reversible case therefore places
-amyloid-like local order in the role of a physical junction rather than a
-terminal aggregate.
+kinetically persistent cores of pathological fibrils to contacts that come
+apart again, and where a sequence falls in that range decides whether it can
+serve as a switchable material. Here, temperature-dependent small- and
+wide-angle X-ray scattering of the sequence-defined elastin-like polypeptide
+\VPAVG{} resolves a reversible transition between a dispersed low-temperature
+state and a hierarchical high-temperature assembly carrying
+$\beta$-sheet-like peaks at $Q=1.38$ and $0.72$~\Ainv{} that vanish on
+cooling. That recovery is gated by time rather than by temperature alone: on a
+continuous cooling ramp none of three chain lengths returns to its heating
+branch, while an aliquot held at \SI{6}{\degreeCelsius} between cycles recovers
+to within 9\% through seven of them. The assembly is therefore reversible but
+slow to undo, which places amyloid-like local order in the role of a physical
+junction rather than a terminal aggregate.
 \end{abstract}
 
 \section*{Introduction}
@@ -138,10 +140,64 @@ The correlation functions say what state the sample was in when each was taken (
   \label{fig:cycle}
 \end{figure}
 
+
+Whether the assembly comes apart again is a question about rate as much as
+about temperature. Three chain lengths, \VPAVG{} and its twenty- and
+ten-repeat counterparts, were taken from \SI{20}{\degreeCelsius} up and
+immediately back down on one stage, each reaching a different ceiling
+because one protocol meets three different phase diagrams: 45.2, 41.4 and
+\SI{33.1}{\degreeCelsius} for ten, twenty and thirty repeats
+(Figure~\ref{fig:ramps}). On the way up all three build low-$Q$ intensity and
+all three lose the decay of $g_2$, so all three assemble and arrest.
+
+None of them comes back down the way it went up. Averaged over
+$0.004<Q<0.008$~\Ainv, the cooling branch at \SI{25}{\degreeCelsius} and below
+stands 8.4, 15.7 and 3.6 times the heating branch for ten, twenty and thirty
+repeats, while at the top of each ramp the two branches agree to within 2 to
+19\%. The hysteresis is therefore in the cold state, not in the hot one: every
+sample reaches the same assembled state it would on heating, and none of them
+has finished dissolving by the time the ramp returns.
+
+That is a statement about the cooling rate rather than about reversibility.
+The ramp spends about twenty-five minutes between the ceiling and
+\SI{20}{\degreeCelsius}, and the hysteresis does not order with chain length,
+which a sequence-encoded irreversibility would. Given time at low temperature
+the same material does recover: the aliquot of Figure~\ref{fig:cycle},
+measured in a separate beamtime and held at \SI{6}{\degreeCelsius} between
+cycles, returns to the same \SI{6}{\degreeCelsius} profile to within a 9\%
+relative standard deviation through seven heating and cooling cycles, with no
+drift from the first to the seventh. The two measurements are consistent and
+they bracket the answer: the transition is reversible, and undoing it is
+slower than building it.
+
+\begin{figure}[htbp]
+  \centering
+  \acsfig{Figure3_Chain_Length_Ramps.pdf}
+  \caption{Three chain lengths through one thermal ramp, heating and cooling.
+Columns are \VPAVG{} with ten, twenty and thirty repeats. (a)--(c)
+background-subtracted $I(Q)$ on the absolute scale; (d)--(f) the intensity
+autocorrelation function at the lowest measured $Q$, the largest length scale.
+Solid lines and filled markers are the heating ramp, dashed lines and open
+markers the cooling ramp that followed it immediately. Colour is temperature on
+one scale shared by every panel, so a colour means the same temperature
+throughout; the ceiling differs between samples because one protocol was
+applied to three materials. Each curve averages the acquisitions falling in a
+\SI{2}{\degreeCelsius} window, through the same two outlier cuts every other
+group in this work receives. The cooling branch lies above the heating branch
+at low temperature in all three samples, by 8.4, 15.7 and 3.6 times over
+$0.004<Q<0.008$~\Ainv{} below \SI{25}{\degreeCelsius}; the branches meet again
+at the top of each ramp. The absolute scale carries a common factor of about
+6\% from the transmission, which is taken from a different beamtime because
+2021-2 recorded no downstream ion chamber; it is the same factor for all three
+samples and moves no feature within a profile.}
+  \label{fig:ramps}
+\end{figure}
+
 % ---------------------------------------------------------------------------
 % TO BE WRITTEN once the 28 Oct / Monday correlations are reduced:
-%   * the chain-length ramp paragraph, (VPAVG)10 / 20 / 30, Figure 2
-%   * the irreversibility of (VPAVG)10, and what it says about chain length
+%   * the (VPAVG)10 cell photograph of the AdvMat SI (Figure S5 there): it shows
+%     a cell still opaque after 48 h at 4 C, which is a STRONGER claim than the
+%     ramps support and has to be reconciled with them before it is used.
 %   * the automated cell assembly, Video S2 and Figure S1b
 % See MONDAY_TODO.md.
 % ---------------------------------------------------------------------------
