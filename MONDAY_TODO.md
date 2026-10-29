@@ -10,63 +10,33 @@ version is recoverable from tag `pre-split` in `PubCode-2021-IDPP`.
 
 ---
 
-## 1. Finish the 2021-2 correlations — 699 acquisitions
+## 1. ~~Finish the 2021-2 correlations~~ — DONE, 28 Oct 20:33
 
-The 28 Oct run stopped at its own 11:00 deadline having done **12,539 of
-13,238**. The 699 that did not run are listed one per line in
+**All 13,238 acquisitions are correlated. Nothing is outstanding here.**
 
-    analysis/SAXPCS_8id/missing_2021-2_20261028.txt
+The 699 the first pass missed were done in a second pass at `NWORKERS=3`:
+23 minutes, 699 of 699, **zero MemoryError**. That confirms the diagnosis —
+the 13 chunk-sized holes in the first pass were four workers exhausting
+memory, not anything wrong with the data. Use `NWORKERS=3` for this beamtime
+from now on; the cost is about a third more wall clock and it is reliable.
 
-**Two causes, and only one is the deadline.**
+Final state in
+`/gdata/s8id-dmdtn/2021-2/babnigg202107_2_nexus/reprocess_results/`:
 
-| run | sample | done | missing | indices | cause |
-|---|---|---|---|---|---|
-| H041 | (VPAVG)30 up | 1425 / 1449 | 24 | 373-396 contiguous | failed chunk |
-| H042 | (VPAVG)30 down | 1450 / 1450 | 0 | | |
-| T214 | (VPAVG)20 up | 2305 / 2389 | 84 | 246-989 scattered | failed chunks |
-| T215 | (VPAVG)20 down | 2390 / 2390 | 0 | | |
-| B039 | (VPAVG)10 up | 2720 / 2780 | 60 | 687-1790 scattered | failed chunks |
-| B040 | (VPAVG)10 down | 2249 / 2780 | 531 | 2250-2780 contiguous | deadline |
+| run | sample | results |
+|---|---|---|
+| H041 | (VPAVG)30 up | 1449 |
+| H042 | (VPAVG)30 down | 1450 |
+| T214 | (VPAVG)20 up | 2389 |
+| T215 | (VPAVG)20 down | 2390 |
+| B039 | (VPAVG)10 up | 2780 |
+| B040 | (VPAVG)10 down | 2780 |
+| | **total** | **13238** |
 
-531 are the clean tail of the last run queued. The other **168 are failed
-chunks**, and the boost log carries **26 `MemoryError`**: four concurrent
-workers intermittently exhausted memory.
-
-**Already scheduled.** `at` job 6 on adamite fires at **01:00 Thu 29 Oct**,
-running `~/llps_2021-2_restore/at_job_pass2.sh` with `NWORKERS=3` and a 06:00
-safety deadline. `filelist.txt` in the run directory has been pointed at the
-699; the full 13,238 is preserved as `filelist_full_20261028.txt`. Expected
-~30 min, so check for the completion email, then:
-
-```bash
-ssh adamite 'atq'                     # should be empty by morning
-ssh adamite 'ls /gdata/s8id-dmdtn/2021-2/babnigg202107_2_nexus/reprocess_results/*_results.hdf | wc -l'
-# expect 13238; if short, a fresh missing_adamite.txt lists what is left
-```
-
-If it has to be re-run by hand:
-
-```bash
-ssh adamite
-cd ~/llps_2021-2_restore
-NWORKERS=3 DEADLINE=$(date -d '2026-11-02 18:00' +%s) ./run_babnigg202107_2_correlations.sh
-```
-
-Note the trap: a plain re-run with the ORIGINAL filelist redoes all 13,238
-(~6.9 h), because `-w` overwrites. Only the swapped filelist gives the 30-minute
-version.
-
-`NWORKERS=3` is the fix for the MemoryErrors; at 4 it loses about 1.3% of
-chunks. The script rebuilds its own file list and `-w` overwrites, so a plain
-re-run is safe and simply redoes the 12,539 as well. To do only the remainder,
-point `LIST` at the missing file instead — it is already in the right format
-(one absolute `.bin` path per line).
-
-It emails qzhang234@anl.gov on any exit, including a crash or a deadline cut.
-**Note: the 28 Oct completion email was sent but delivery was never confirmed.
-If nothing arrived, check `/usr/sbin/sendmail` on adamite before relying on it.**
-
----
+Checked: no zero-length or truncated files, and a spot check of the last file
+written gives g2 (61, 27) fully finite with the temperature and QNW zone
+present. `filelist.txt` in the run directory still holds the 699; the full set
+is `filelist_full_20261028.txt`, so restore it before any future whole-set run.
 
 ## 2. Then reduce and plot the ramps — nothing exists yet
 
@@ -86,7 +56,8 @@ If nothing arrived, check `/usr/sbin/sendmail` on adamite before relying on it.*
   and `/xpcs/qmap/dynamic_v_list_dim0` (27,). The old pickles lacked them,
   which is what blocked this before.
 - Per-acquisition temperature is at `/entry/sample/temperature`, repaired on
-  28 Oct from the Data Exchange archive.
+  28 Oct from the Data Exchange archive, and present in the correlation
+  results as well as the metadata files.
 - **Use `/entry/sample/qnw_zone`, do not assume zone 1.** (VPAVG)10 and
   (VPAVG)20 ramp in zone 1, (VPAVG)30 in zone 3, idle zones parked at 6 C.
   Assuming zone 1 puts a flat 6 C on the (VPAVG)30 temperature axis.
