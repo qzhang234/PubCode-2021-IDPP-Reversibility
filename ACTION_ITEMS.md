@@ -17,69 +17,79 @@ strongest piece of evidence is a photograph of a cloudy cell.
 
 ---
 
-## 1. The one experiment that matters: paired capillaries at 12-ID-B
+## 1. The experiment: paired solutions at 8-ID, dual detector, one shift
 
-**This is the whole plan.** For each of the three chain lengths, two capillaries
-from one stock:
+Settled 29 Oct. **Everything structural and dynamical in one beamtime**, using
+the post-Upgrade dual-detector setup: Rigaku 3M at 22 m for SAXPCS and Lambda
+2M at 2.2 m for WAXPCS. The Lambda is on a diffractometer arm, so it reaches
+the beta-sheet peaks at 1.38 and 0.72 A^-1 despite the long flight path --
+checked, because a centred detector at 2.2 m would fall short by a factor of
+five and the whole structural half depends on it.
 
-| | |
-|---|---|
-| **Cycled** | taken through the full thermal ramp, then returned to 4 C |
-| **Reference** | never heated, held at 4 C throughout |
+That is a larger Q range and better Q resolution than the 12-ID-B pair the
+existing Figure 1 came from, and it removes the need for a separate 12-ID trip.
 
-Measure both at 10 C and 30 C by simultaneous SAXS/WAXS, exactly as the
-existing (VPAVG)30 pair in Figure 1 was measured. That generalises Figure 1
-from one chain length to three and answers the question the paper actually
-asks, at both length scales at once:
+### Per chain length, two solutions from one stock
 
-- **Mesoscale**, from SAXS: does the low-Q assembly dissolve?
-- **Molecular**, from WAXS: do the beta-sheet-like peaks at 1.38 and
-  0.72 A^-1 go away?
+| | before the beamtime | at the beamtime |
+|---|---|---|
+| **A** | photographed, heated until it gels, photographed, held ~24 h at 4 C, photographed | measured cold, then heated |
+| **B** | photographed, never heated, held alongside A | measured cold, then heated |
 
-The second is the one that turns a correlation into a mechanism. The paper
-currently reports beta-sheet peaks and reversibility side by side and is
-careful not to link them. If the peaks return to the reference profile for
-thirty repeats and persist for ten, the junctions ARE the beta-sheet contacts,
-and that is a different and much stronger paper.
+Then at the beamline, both measured by simultaneous SAXPCS and WAXPCS while
+cold, and both taken up through gelation with both detectors running.
+Staggering the heating across the QNW zones fits all six in well under a day.
 
-### Make it a time series, not just an endpoint
+### What each comparison answers
 
-One capillary per condition answers "did it recover by day N". Several
-capillaries of the same construct, pulled from the fridge at **1 h, 6 h, 24 h,
-48 h and 1 week**, give a coarse recovery curve per chain length as well. Same
-beamtime, more capillaries, no extra instrument.
+- **A against B while cold** -- did the assembly come apart? SAXS answers it at
+  the mesoscale, WAXS answers it for the beta-sheet contacts. Measuring the
+  pair side by side in one session removes the beamtime-to-beamtime
+  normalisation the present Figure 1 depends on.
+- **A against B on heating** -- does a recycled sample re-gel into the same
+  thing a virgin one does? Matching cold states shows the assembly dissolved;
+  matching gelation runs show it dissolved into the same starting material.
+  This is a stronger reversibility statement than the paper currently makes,
+  and the design gives it away for free.
+- **Across chain lengths** -- whether the beta-sheet peaks track the recovery.
+  That is the one that turns the paper's correlation into a mechanism.
 
-That matters because of a trap in the endpoint-only design: if (VPAVG)10 in
-fact recovers at two weeks, a 48 h endpoint calls it irreversible and the
-claim is wrong. A time series shows the trend; a single endpoint cannot
-distinguish "very slow" from "never".
+### Hold time: one point, deliberately
 
-### Cheap insurance against that trap
+Twenty-four hours at 4 C, not a staggered series. A staggered series was
+considered and dropped: the question here is binary, the existing photograph
+already covers 48 h, and samples that have not recovered within a few hours
+empirically stay that way. 
 
-Leave one capillary of each construct on the bench and photograph it weekly
-against a fixed background, for as long as you can be bothered. It costs
-nothing, it runs long after the beamtime ends, and it is the only thing that
-can distinguish a two-week time constant from a genuinely arrested state.
+**Write the claim to match**: what this supports is *does not recover within
+24 h at 4 C*, not *irreversible*. No finite hold establishes the stronger word.
+
+Optional, one extra cell per construct, from the argument that untangling is
+thermally activated and deep cooling starves it: hold a third solution at
+10-15 C instead of 4 C. If (VPAVG)10 has still not recovered with that much
+more thermal energy available, the claim is much harder to argue with.
+
+### Photographs have to be quantitative-capable
+
+Fixed lighting, fixed camera position, grey card in every frame. With that,
+transmittance comes out of pixel intensity afterwards and the photographs
+become data. Without it they stay illustration, which is exactly the position
+the current (VPAVG)10 evidence is in and the thing this is meant to fix.
 
 ---
 
-## 2. Dedicated turbidity: probably not needed, with one caveat
+## 2. The same shift should serve Paper A
 
-The earlier recommendation was a benchtop turbidimeter. With the 12-ID
-experiment above, **it is largely redundant**, because SAXS/WAXS answers the
-same question better: turbidity integrates scattering from roughly micron-scale
-heterogeneity and cannot distinguish a network that dissolved from one that
-coarsened, while SAXS measures the mesoscale assembly directly and WAXS sees
-the contacts turbidity is blind to.
+Paper A's second stated limitation is that its high-Q ordering and low-Q
+dynamics come from separate experiments, so no time-resolved causal relation
+between them is established. The dual-detector setup removes that outright: one
+isothermal hold at 28.50 C with both detectors running gives structure and
+dynamics on the same loading, at the same time.
 
-**Caveat.** Turbidity's one real advantage is unlimited, cheap time resolution
-over weeks. The weekly photographs of item 1 recover most of that for free.
-Photographs are quantitative enough IF they are taken under fixed lighting with
-a grey reference in frame, so transmittance can be read from pixel intensity
-afterwards; without that discipline they are illustration, not data.
-
-So: skip the dedicated turbidimeter, but **do not skip the long-time
-observation** in some form.
+That is the single experiment that would lift Paper A toward a
+higher-impact venue, and it is one extra hold on a shift that is happening
+anyway. **Build the beamtime request around both papers, not one** -- it is a
+far stronger case than either alone.
 
 ---
 
@@ -143,17 +153,24 @@ three points on one axis.
 
 ---
 
-## If the 12-ID experiment works
-
-A realistic reading of where it lands the paper:
+## If the experiment works
 
 | outcome | venue |
 |---|---|
-| Recovery curves per chain length, beta-sheet peaks tracking them | **PNAS or Nano Letters** is arguable: it is a mechanism, not a correlation |
-| Recovery curves, beta-sheet peaks not tracking | **ACS Nano / Nature Communications**: still a real result, and knowing the two are not linked is worth publishing |
-| Endpoints only, no kinetics | **Biomacromolecules**, as now, but with the photograph replaced by data |
+| Recovery resolved per chain length, and the beta-sheet peaks track it | **PNAS or Nano Letters** is arguable: it is a mechanism, not a correlation |
+| Recovery resolved, beta-sheet peaks do not track it | **ACS Nano / Nature Communications**: still a real result, and knowing the two are not linked is worth publishing |
+| Cold-state comparison only, no re-gelation data | **Biomacromolecules**, as now, but with the photograph replaced by data |
 
 The risk worth naming: if the beta-sheet peaks do **not** track recovery, both
 papers lose the framing they currently lean on. That is a reason to do the
-measurement, not to avoid it, but it is better to know before the framing is
-built into a submitted abstract.
+measurement, not to avoid it, but better to know before the framing is built
+into a submitted abstract.
+
+## What is no longer in the plan
+
+- **A dedicated turbidimeter.** Superseded: SAXS answers the same question at
+  the right length scales and WAXS sees contacts turbidity is blind to. The
+  photographs, taken with the discipline above, cover the optical record.
+- **A separate 12-ID-B trip.** The dual-detector setup at 8-ID covers the same
+  Q range with better resolution, in the same shift as the dynamics.
+- **A staggered recovery series.** One 24 h hold, for the reasons in item 1.
