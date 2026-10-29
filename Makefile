@@ -27,7 +27,9 @@ F_12ID  := $(ANA)/SAXS_12id/Figure1_SAXS_WAXS.pdf
 F_CYCLE := $(ANA)/SAXPCS_8id/Figure2_Thermal_Cycle.pdf
 XPCS_DATA := $(wildcard $(ANA)/SAXPCS_8id/data/*.hdf) \
              $(ANA)/SAXPCS_8id/data/thermal_cycle_temperature.csv
-FIGURES := $(F_12ID) $(F_CYCLE)
+F_RAMPS := $(ANA)/ramps/Figure3_Chain_Length_Ramps.pdf
+RAMP_DATA := $(wildcard $(ANA)/ramps/data/*.hdf) $(ANA)/ramps/data/trace_2021-2.csv
+FIGURES := $(F_12ID) $(F_CYCLE) $(F_RAMPS)
 
 .PHONY: all figures papers check clean
 
@@ -50,6 +52,12 @@ $(F_CYCLE): $(ANA)/SAXPCS_8id/thermal_cycle.py $(ANA)/SAXPCS_8id/abs_xsec.py \
             $(XPCS_DATA) $(ANA)/common/acs_style.py $(ANA)/SAXPCS_8id/xpcs_fit.py \
             $(ANA)/SAXPCS_8id/nexus_read.py
 	cd $(ANA)/SAXPCS_8id && $(PY) thermal_cycle.py && mv FigureS4_Thermal_Cycle.pdf Figure2_Thermal_Cycle.pdf
+
+# Reads only ramps/data/, written by reduce_ramps.py on a /gdata host and
+# committed, so this runs from a clone.
+$(F_RAMPS): $(ANA)/ramps/plot_ramps.py $(ANA)/SAXPCS_8id/abs_xsec.py \
+            $(RAMP_DATA) $(ANA)/common/acs_style.py $(ANA)/SAXPCS_8id/nexus_read.py
+	cd $(ANA)/ramps && $(PY) plot_ramps.py
 
 define compile
 	@mkdir -p $(BUILD)
