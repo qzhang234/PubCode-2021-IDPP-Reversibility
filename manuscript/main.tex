@@ -96,15 +96,16 @@ kinetically persistent cores of pathological fibrils to contacts that come
 apart again, and where a sequence falls in that range decides whether it can
 serve as a switchable material. Here, temperature-dependent small- and
 wide-angle X-ray scattering of the sequence-defined elastin-like polypeptide
-\VPAVG{} resolves a reversible transition between a dispersed low-temperature
-state and a hierarchical high-temperature assembly carrying
-$\beta$-sheet-like peaks at $Q=1.38$ and $0.72$~\Ainv{} that vanish on
-cooling. That recovery is gated by time rather than by temperature alone: on a
-continuous cooling ramp none of three chain lengths returns to its heating
-branch, while an aliquot held at \SI{6}{\degreeCelsius} between cycles recovers
-to within 9\% through seven of them. The assembly is therefore reversible but
-slow to undo, which places amyloid-like local order in the role of a physical
-junction rather than a terminal aggregate.
+\VPAVG{} resolves a transition between a dispersed low-temperature state and a
+hierarchical high-temperature assembly carrying $\beta$-sheet-like peaks at
+$Q=1.38$ and $0.72$~\Ainv{} that vanish on cooling. Separating what is slow
+from what is permanent takes two measurements. On a continuous cooling ramp
+none of three chain lengths returns to its heating branch, so the hysteresis
+of a ramp is a rate effect and says nothing about reversibility. Given time
+the two outcomes diverge: \VPAVG{} recovers its low-temperature profile to
+within 9\% through seven held cycles, while the ten-repeat construct stays
+turbid after two days at \SI{4}{\degreeCelsius}. Chain length therefore
+decides whether the assembly is a physical junction or a terminal aggregate.
 \end{abstract}
 
 \section*{Introduction}
@@ -142,33 +143,47 @@ The correlation functions say what state the sample was in when each was taken (
 
 
 Whether the assembly comes apart again is a question about rate as much as
-about temperature. Three chain lengths, \VPAVG{} and its twenty- and
-ten-repeat counterparts, were taken from \SI{20}{\degreeCelsius} up and
-immediately back down on one stage, each reaching a different ceiling
-because one protocol meets three different phase diagrams: 45.2, 41.4 and
-\SI{33.1}{\degreeCelsius} for ten, twenty and thirty repeats
-(Figure~\ref{fig:ramps}). On the way up all three build low-$Q$ intensity and
-all three lose the decay of $g_2$, so all three assemble and arrest.
+about temperature, and the two have to be separated before either can be read.
+Three chain lengths, \VPAVG{} and its twenty- and ten-repeat counterparts, were
+taken from \SI{20}{\degreeCelsius} up and immediately back down on one stage,
+each reaching a different ceiling because one protocol meets three different
+phase diagrams: 45.2, 41.4 and \SI{33.1}{\degreeCelsius} for ten, twenty and
+thirty repeats (Figure~\ref{fig:ramps}). On the way up all three build low-$Q$
+intensity and all three lose the decay of $g_2$, so all three assemble and
+arrest.
 
 None of them comes back down the way it went up. Averaged over
 $0.004<Q<0.008$~\Ainv, the cooling branch at \SI{25}{\degreeCelsius} and below
 stands 8.4, 15.7 and 3.6 times the heating branch for ten, twenty and thirty
 repeats, while at the top of each ramp the two branches agree to within 2 to
-19\%. The hysteresis is therefore in the cold state, not in the hot one: every
-sample reaches the same assembled state it would on heating, and none of them
-has finished dissolving by the time the ramp returns.
+19\%. The hysteresis is therefore in the cold state alone, and it does not
+order with chain length. A ramp that spends about twenty-five minutes between
+the ceiling and \SI{20}{\degreeCelsius} simply does not give the assembly time
+to come apart, whatever the sequence. The hysteresis of a cooling ramp is a
+statement about rate, and on its own it says nothing about whether the
+transition is reversible.
 
-That is a statement about the cooling rate rather than about reversibility.
-The ramp spends about twenty-five minutes between the ceiling and
-\SI{20}{\degreeCelsius}, and the hysteresis does not order with chain length,
-which a sequence-encoded irreversibility would. Given time at low temperature
-the same material does recover: the aliquot of Figure~\ref{fig:cycle},
-measured in a separate beamtime and held at \SI{6}{\degreeCelsius} between
-cycles, returns to the same \SI{6}{\degreeCelsius} profile to within a 9\%
-relative standard deviation through seven heating and cooling cycles, with no
-drift from the first to the seventh. The two measurements are consistent and
-they bracket the answer: the transition is reversible, and undoing it is
-slower than building it.
+What the sequence decides shows up once the cold state is given time, and then
+the three part company. Held at \SI{6}{\degreeCelsius} between cycles, \VPAVG{}
+returns to the same \SI{6}{\degreeCelsius} profile to within a 9\% relative
+standard deviation through seven heating and cooling cycles, with no drift from
+the first to the seventh (Figure~\ref{fig:cycle}), and two aliquots of the same
+stock, one cycled more than ten times and one never heated, overlap at
+\SI{10}{\degreeCelsius} (Figure~\ref{fig:static}). The ten-repeat construct does
+not recover at all: a cell loaded with it and left in a refrigerator at
+\SI{4}{\degreeCelsius} for more than forty-eight hours after a single ramp is
+still visibly opaque, against the sixty seconds in which \VPAVG{} clears
+(Video~S1). Two days is five orders of magnitude longer than the sixty seconds
+\VPAVG{} needs and three orders longer than the cooling ramp, so the difference
+between the two constructs is not a slower rate but a different outcome.
+
+Taken together the two observations separate cleanly. Ramp hysteresis is
+universal and kinetic: every chain length shows it, it lives only in the cold
+state, and it reflects how fast the ramp was run. Reversibility is
+sequence-encoded: given time, thirty repeats come apart and ten do not. It is
+the second that makes the $\beta$-sheet-like contacts of \VPAVG{} a candidate
+physical junction rather than a terminal aggregate, and the first that explains
+why a single cooling ramp cannot be used to test for it.
 
 \begin{figure}[htbp]
   \centering
@@ -186,7 +201,9 @@ applied to three materials. Each curve averages the acquisitions falling in a
 group in this work receives. The cooling branch lies above the heating branch
 at low temperature in all three samples, by 8.4, 15.7 and 3.6 times over
 $0.004<Q<0.008$~\Ainv{} below \SI{25}{\degreeCelsius}; the branches meet again
-at the top of each ramp. The absolute scale carries a common factor of about
+at the top of each ramp. That hysteresis is a rate effect common to all three
+and is not what distinguishes them; the held measurements of
+Figure~\ref{fig:cycle} and Video~S1 are. The absolute scale carries a common factor of about
 6\% from the transmission, which is taken from a different beamtime because
 2021-2 recorded no downstream ion chamber; it is the same factor for all three
 samples and moves no feature within a profile.}
@@ -195,9 +212,21 @@ samples and moves no feature within a profile.}
 
 % ---------------------------------------------------------------------------
 % TO BE WRITTEN once the 28 Oct / Monday correlations are reduced:
-%   * the (VPAVG)10 cell photograph of the AdvMat SI (Figure S5 there): it shows
-%     a cell still opaque after 48 h at 4 C, which is a STRONGER claim than the
-%     ramps support and has to be reconciled with them before it is used.
+%   * FIGURE NEEDED: the (VPAVG)10 cell photograph, before the ramp and after
+%     >48 h at 4 C, showing it still opaque.  It is Figure S5 of the AdvMat SI
+%     and exists in no repository here, so it has to be added by hand as
+%     manuscript/figures/FigureS1_Irreversibility.png and the float below
+%     uncommented.  The text already states what it shows.
+% \begin{figure}[htbp]
+%   \centering
+%   \includegraphics[width=0.7\linewidth]{FigureS1_Irreversibility.png}
+%   \caption{Irreversibility of the ten-repeat construct. The same cell before
+% the thermal ramp (left) and after more than forty-eight hours at
+% \SI{4}{\degreeCelsius} following it (right). The persistent opacity is the
+% assembly failing to dissolve, against the sixty seconds in which \VPAVG{}
+% clears.}
+%   \label{fig:irrev}
+% \end{figure}
 %   * the automated cell assembly, Video S2 and Figure S1b
 % See MONDAY_TODO.md.
 % ---------------------------------------------------------------------------
