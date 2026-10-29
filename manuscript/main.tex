@@ -8,13 +8,15 @@
 \usepackage{bm}
 \usepackage{xr}
 \usepackage[hidelinks]{hyperref}
+% let the long repository URL break at / and -, so it stays inside the margin
+\def\UrlBreaks{\do\/\do\-}
 % Figure references.  Every figure number in this project is produced by
 % \ref, never typed by hand: \ref{fig:...} for figures of this document, and
 % \ref{SI-fig:...} for figures of the other one, whose labels the xr package reads
 % out of its .aux.  Panel letters are appended literally, e.g.
-% Figure~\ref{fig:xpcs}a.  `make papers` compiles si -> main -> si so both
+% Figure~\ref{fig:saxs}a.  `make papers` compiles si -> main -> si so both
 % directions resolve on a clean tree; `make check` reports any that did not.
-% \externaldocument[SI-]{build/si}   % re-enable when si.tex exists
+\externaldocument[SI-]{build/si}
 
 % Line numbers, for the reviewers' convenience.  lineno does not see amsmath's
 % display environments by itself, so a numbered equation would silently break
@@ -33,20 +35,19 @@
 \SectionNumbersOff
 \graphicspath{{figures/}}
 \sisetup{detect-all=true,range-phrase=--,range-units=single}
+\DeclareSIUnit\Molar{M}
 
-\newcommand{\VPAVG}{(VPAVG)$_{30}$}
+\newcommand{\VP}[1]{(VPAVG)$_{#1}$}
 \newcommand{\Ainv}{\text{\AA}$^{-1}$}
 
 % Data-derived figures are drawn at exactly the ACS column widths (3.33 in
 % single, 7.0 in double), so they are included at NATURAL SIZE -- no width=
-% scaling -- and the 8 pt lettering in the file is 8 pt on the page.  A
-% double-column figure is wider than this class's 6.52 in text block, so
-% \makebox lets it overhang symmetrically into the margins instead of being
-% shrunk.  Setup.pdf is the approved original artwork and is not on that grid,
-% so it keeps width=\linewidth.
+% scaling -- and the 8 pt lettering in the file is 8 pt on the page.  Setup.pdf
+% is the original artwork of the Overleaf version and is not on that grid, so
+% it keeps width=\linewidth.
 \newcommand{\acsfig}[1]{\makebox[\linewidth][c]{\includegraphics{#1}}}
 
-\title{Thermally Reversible Beta-Sheet-like Ordering Controls Gelation in Elastin-like Polypeptides}
+\title{Thermally Reversible and Microscopically Tunable Gelation in Recombinant Polypeptides}
 
 \author{Doga Ozgulbas}
 \affiliation{Data Science and Learning Division, Argonne National Laboratory, Lemont, Illinois 60439, United States}
@@ -91,157 +92,121 @@
 \begin{document}
 
 \begin{abstract}
-Amyloid-like $\beta$-sheet packing spans a wide range of stabilities, from the
-kinetically persistent cores of pathological fibrils to contacts that come
-apart again, and where a sequence falls in that range decides whether it can
-serve as a switchable material. Here, temperature-dependent small- and
-wide-angle X-ray scattering of the sequence-defined elastin-like polypeptide
-\VPAVG{} resolves a transition between a dispersed low-temperature state and a
-hierarchical high-temperature assembly carrying $\beta$-sheet-like peaks at
-$Q=1.38$ and $0.72$~\Ainv{} that vanish on cooling. Separating what is slow
-from what is permanent takes two measurements. On a continuous cooling ramp
-none of three chain lengths returns to its heating branch, so the hysteresis
-of a ramp is a rate effect and says nothing about reversibility. Given time
-the two outcomes diverge: \VPAVG{} recovers its low-temperature profile to
-within 9\% through seven held cycles, while the ten-repeat construct stays
-turbid after two days at \SI{4}{\degreeCelsius}. Chain length therefore
-decides whether the assembly is a physical junction or a terminal aggregate.
+Elastin-like polypeptides gel on heating, and whether the gel dissolves again
+on cooling decides whether it can serve as a switchable material. We followed
+the thermally induced gelation of concentrated aqueous \VP{x}, with $x$ = 10,
+20 and 30, by small-angle X-ray photon correlation spectroscopy (SA-XPCS)
+during heating at \SI{0.1}{\degreeCelsius\per\minute}. Each \SI{2}{\second}
+exposure was taken at a fresh sample position, and heating stopped once the
+intensity autocorrelation function no longer decayed. All three develop a
+two-step decay before arresting, with a fast mode that carries 27--34\% of the
+amplitude. For \VP{30} the SAXS profiles collapse onto one master curve up to
+\SI{29.6}{\degreeCelsius}, and the characteristic length grows as
+$(T_0-T)^{-0.80}$ toward $T_0=\SI{30.5}{\degreeCelsius}$. Reversibility depends
+on chain length. \VP{10} and \VP{20} stay arrested on cooling, whereas \VP{30}
+largely recovers during cooling and returns to its dispersed state after
+storage at \SI{4}{\degreeCelsius}.
 \end{abstract}
 
 \section*{Introduction}
 
-Amyloid-like $\beta$-sheet ordering occupies an unusual position in protein science and polymer materials. Pathological amyloid fibrils formed by proteins and peptides that share no sequence homology are associated with Alzheimer’s disease,\cite{Masters1985-pnas} Parkinson’s disease,\cite{Serpell2000-pnas} type II diabetes,\cite{Cooper1987-pnas} prion diseases,\cite{Pan1993-pnas} and systemic light-chain amyloidosis.\cite{Radamaker2019-ncomms} Many amyloid fibrils are kinetically persistent because extended hydrogen-bonded sheets are reinforced by tightly packed steric-zipper interfaces.\cite{Sawaya2007-nature} Yet amyloid-like order is not intrinsically pathological: functional amyloids store mammalian peptide hormones in pituitary secretory granules\cite{Maji2009-science} and build the extracellular matrix of bacterial biofilms,\cite{Chapman2002-science} and related assemblies are increasingly used as mechanically robust biomaterials.\cite{Knowles2016-am} What differs across these systems is not whether $\beta$-sheet-like order forms but how long it lasts: hormone granules disassemble to release functional monomer, whereas steric-zipper cores are far more persistent. Amyloid-like packing therefore spans a wide range of stabilities rather than committing a sequence to one permanent structure,\cite{Palmadottir2025-bpr} and where a sequence falls in that range is a materials-design variable.
+Genetically engineered biopolymers such as elastin-like polypeptides (ELPs) are a versatile platform for stimuli-responsive soft materials.\cite{Amiram2011-la,Quiroz2015-mh} These repetitive protein polymers, derived from the hydrophobic motifs of tropoelastin, show a tunable lower critical solution temperature (LCST) transition.\cite{Despanie2016-jw} Above a characteristic temperature, ELPs phase separate through hydrophobic association and desolvation.\cite{Meyer2004-zb,Glassman2015-cw} The equilibrium thermodynamics of this transition is well documented. The kinetic pathway by which the protein-rich phase arrests into a viscoelastic gel is much less understood. Because the properties of ELP materials are sensitive to sequence, knowing how molecular parameters govern the onset and the reversibility of gelation is central to the design of dynamic biopolymer networks.\cite{Varanko2020-ek}
 
-Reversible $\beta$-sheet-like contacts are attractive as candidate physical junctions because backbone hydrogen bonding can stabilize locally ordered assemblies, whereas hydrated or weakly packed interfaces can remain dynamic or reversible.\cite{Kato2012-cell,Hughes2018-science,Luo2018-nsmb,Palmadottir2025-bpr} Elastin-like polypeptides (ELPs) are well suited to test this possibility because their sequence, molecular weight, and lower critical solution temperature (LCST) behavior can be programmed recombinantly.\cite{Meyer2004-zb,Amiram2011-la,Quiroz2015-mh,Varanko2020-ek,Saha2020-jg} Above the LCST, ELPs undergo hydrophobic desolvation and can form coacervates or hierarchical assemblies depending on sequence, concentration, and thermal history.\cite{Varanko2020-ek,Saha2020-jg,Sing2017-zq} In particular, alanine-containing ELPs can form stiff, thermoresponsive gels through arrested phase separation.\cite{Glassman2015-cw,Glassman2016-pq} Although these studies establish the arrested state from time-averaged scattering and rheology, how the assembly evolves toward arrest remains elusive.
+The reversibility of an ELP gel is tied to its thermal history. Prolonged exposure to elevated temperature coarsens and densifies the protein-rich network and can carry it into a structurally arrested state that no longer dissolves on cooling.\cite{Glassman2015-cw} A measurement of the onset of gelation therefore has to be fast compared with the coarsening that follows it, and bulk methods that need long thermal equilibration, such as temperature-dependent rheology, sample the network after it has evolved.
+
+Here we follow the onset with in situ small-angle X-ray photon correlation spectroscopy (SA-XPCS).\cite{Lehmkuhler2021-jx,Chushkin2025-qs} Metallic sample cells of high thermal conductivity and the coherent flux of the Advanced Photon Source allow the sample to be cooled as soon as dynamic arrest is detected. Each measurement is a \SI{2}{\second} exposure, and the beam moves to a fresh spot for the next one. This keeps the dose per spot low while using the full coherent flux, and a detector running at \SI{52}{\kilo\hertz} resolves the dynamics down to \SI{20}{\micro\second} as the network forms.\cite{Rao2020-qr,Chen2020-fn}
+
+The short window limits the observation to relaxations faster than a few seconds. In arresting colloidal networks studied by XPCS together with rheology, however, the evolution from a two-step decay to a flat intensity autocorrelation function $g_2$ marks a state past the macroscopic gel point, where $G'>G''$.\cite{Zhang2017-ip} A flat $g_2$ is therefore an in situ indicator of a formed gel network.
+
+In this Letter we compare the thermally induced gelation of aqueous \VP{x} with $x$ = 10, 20 and 30. The SAXS profiles show the growth of a hierarchical network of the kind formed by viscoelastic phase separation, and the correlation functions show fast local and slow collective modes emerging together before arrest.\cite{Tanaka2000-qq,Tanaka2006-tz} Measured on heating and on cooling under one protocol, the three chain lengths share their gelation dynamics but differ in whether the gel dissolves again.
 
 \section*{Results and Discussion}
 
-Figure~\ref{fig:static} establishes the low- and high-temperature structures and their reversibility. Two aliquots from the same stock were measured at APS 12-ID-B by simultaneous SAXS/WAXS at \SI{13.3}{\kilo\electronvolt}.\cite{APS12IDB,Xu2022-12IDB,Zheng2022-12IDB} The ``Measurement'' aliquot had undergone more than 10 heating/cooling cycles; the ``Reference'' aliquot had stayed at \SI{4}{\degreeCelsius}. At \SI{10}{\degreeCelsius} the two overlap, and a Guinier fit to the Reference gives an apparent $R_g=22.65\pm0.50$~\AA{} (SI Appendix), a dispersed state with no mesoscale aggregates down to $Q=0.0081$~\Ainv, which corresponds to structures below approximately \SI{78}{\nano\meter}. At \SI{30}{\degreeCelsius}, both aliquots reproducibly develop an approximate $I(Q)\propto Q^{-3.2}$ response at low $Q$ (slopes $-3.17$ and $-3.15$ over $0.012<Q<0.040$~\Ainv). Both also develop the same pair of high-$Q$ features, at $Q=1.38$ and $0.72$~\Ainv{} in the Reference and 1.36 and 0.74~\Ainv{} in the Measurement. The cycled aliquot alone makes the point: it still develops both peaks at \SI{30}{\degreeCelsius} and shows neither at \SI{10}{\degreeCelsius}. A more direct test at 8-ID-I took a single aliquot through seven consecutive \SIrange{6}{34}{\degreeCelsius} cycles, heated at \SI{1}{\degreeCelsius\per\minute} (SI Appendix). Across the seven cycles the \SI{6}{\degreeCelsius} profile recovers to within a 9\% relative standard deviation with no systematic drift, and at \SI{33.8}{\degreeCelsius} the correlation function stays close to $1+\beta$ in every cycle, the signature of an arrested state. The sample therefore assembled and arrested on every heating and returned to the same low-temperature state on every cooling (SI Appendix). Video~S1 independently shows recovery of optical transparency after cooling.
+Each sample contained about \SI{100}{\milli\gram\per\milli\liter} of recombinant protein in \SI{20}{\milli\Molar} HEPES (pH 8), \SI{250}{\milli\Molar} NaCl and \SI{2}{\milli\Molar} DTT; synthesis and purification are described in the Supporting Information. The solutions were pipetted into aluminum liquid cells (Figure~\ref{SI-fig:cells}), equilibrated at \SI{6}{\degreeCelsius}, heated to \SI{20}{\degreeCelsius} at \SI{1}{\degreeCelsius\per\minute}, and then heated at \SI{0.10}{\degreeCelsius\per\minute} while SA-XPCS was recorded continuously (Figures~\ref{SI-fig:ramp10}a--\ref{SI-fig:ramp30}a). Heating stopped once $g_2$ no longer decayed (Figures~\ref{SI-fig:ramp10}e--\ref{SI-fig:ramp30}e), at 45.2, 41.4 and \SI{32.8}{\degreeCelsius} for \VP{10}, \VP{20} and \VP{30}, respectively. Each sample was then cooled to \SI{20}{\degreeCelsius} at the same rate (Figures~\ref{SI-fig:ramp10}b--\ref{SI-fig:ramp30}b). The heating ramps comprise 2780, 2389 and 1198 acquisitions, and each cooling ramp the same number to within one. Every acquisition recorded 100{,}000 frames at \SI{52}{\kilo\hertz} at a fresh sample position, so that no spot was exposed twice. The radiation-damage controls are described in the Supporting Information, and the measurement is sketched in Figure~\ref{fig:setup}.
 
 \begin{figure}[htbp]
   \centering
-  \acsfig{Figure1_SAXS_WAXS.pdf}
-  \caption{Temperature-dependent structure and reversibility of \VPAVG. At \SI{10}{\degreeCelsius}, the Measurement and Reference profiles overlap and the Reference data give an apparent $R_g=22.65\pm0.50$~\AA{} (SI Appendix). Heating produces an approximate $Q^{-3.2}$ low-$Q$ response and peaks at $Q=1.38$ and $0.72$~\Ainv, corresponding to real-space spacings of approximately 4.5 and 8.8~\AA, respectively. The dashed line is an unweighted power-law fit to the Reference profile at \SI{30}{\degreeCelsius} over $0.012<Q<0.040$~\Ainv. Inset: the high-$Q$ region of that same profile (open circles, same arbitrary intensity units as the main panel); red curves are independent Gaussian-plus-linear-background fits over $0.48<Q<1.00$ and $1.18<Q<1.70$~\Ainv, and the red dashed lines and labels mark the fitted peak centers. The recovery and reproducible re-formation of these signatures demonstrate a thermally reversible structural transition within experimental sensitivity.}
-  \label{fig:static}
+  \includegraphics[width=\linewidth]{Setup.pdf}
+  \caption{Schematic of the SA-XPCS measurement of temperature-induced gelation in elastin-like polypeptides. A partially coherent X-ray beam of \SI{10.94}{\kilo\electronvolt} is focused to \SI{10}{\micro\meter} $\times$ \SI{10}{\micro\meter} on the sample, and the coherent scattering pattern $I(\vec{Q},t)$ (``speckle'') is recorded by a photon-counting detector \SI{7.8}{\meter} downstream at a frame rate of \SI{52}{\kilo\hertz}. \VP{x} solutions (inset, bottom left) are loaded into \SI{2}{\milli\meter} thick aluminum cells with \SI{3}{\milli\meter} diameter polycarbonate windows and held at \SI{6}{\degreeCelsius} in a multi-zone temperature-controlled chamber. As the temperature rises slowly, the ELPs assemble into a hierarchical, percolating network (top left, stages i--iv). The larger structures raise the SAXS intensity $I(Q)$ at low $Q$, and the arrest of their dynamics flattens the intensity autocorrelation function $g_2(Q,\Delta t)$, as sketched by the red and blue curves on the right.}
+  \label{fig:setup}
 \end{figure}
 
-The two reciprocal-space regimes describe a hierarchical assembly. Power-law small-angle scattering signifies density heterogeneity extending across the probed interval rather than a single resolved structural scale.\cite{Teixeira1988-jac} Related gel-forming ELPs exhibit disordered bicontinuous or fractal protein-rich networks produced by arrested phase separation.\cite{Glassman2015-cw,Glassman2016-pq} The 4.5 and 8.8~\AA{} spacings are compatible with strand-to-strand and sheet-to-sheet packing in cross-$\beta$-like assemblies, whose reflections are reported at approximately 4.8~\AA{} along the fibril direction and between 8 and 11~\AA{} across it.\cite{Sawaya2007-nature,Sunde1997-jmb} Both features are broad and exhibit full widths at half maximum of 0.25 and 0.34~\Ainv{} (correlation lengths $2\pi/\Delta Q$ of only about 25 and 19~\AA), so the ordering extends over a few repeat spacings rather than forming extended cross-$\beta$ crystallites. Their concurrent appearance with the low-$Q$ response establishes coexistence of local ordered contacts and mesoscale density heterogeneity. The disappearance of the peaks on cooling identifies thermally labile $\beta$-sheet-like associations that are plausible, rather than uniquely established, physical junctions.
+A single \SI{2}{\second} acquisition limits the sensitivity to very slow arrest, which in related systems can develop over much longer times.\cite{Begam2021-fh,Chushkin2022-bw,Girelli2021-zz} The short exposure, however, allows the high incident flux that is essential for resolving fast dynamics with a photon-counting detector. Even so, the photon count per \SI{19.2}{\micro\second} frame remains sparse, which makes two-time correlation analysis impractical,\cite{Zhang2018-xl,Sheyfer2020-yb} and $g_2$ was computed with the multi-tau algorithm. To improve statistics, each ramp was divided into ten consecutive sections of equal acquisition count (twenty for \VP{20}), and $I(Q)$ and $g_2(Q,\Delta t)$ were averaged within each section. Before averaging, every acquisition was compared with every other in its section by the cross-correlation of its $g_2$, of the uncertainty of $g_2$, and of $\log I(Q)$. The least similar 5\% on any of the three were excluded, about 12\% of the acquisitions in all. The code for the reduction and for every figure is publicly available (Data and Code Availability), as is the original analysis.\cite{Chu2023-xx}
 
+Figure~\ref{fig:saxs} compiles the temperature-dependent SAXS profiles $I(Q,T)$ of \VP{30} during heating, on the absolute scale with the buffer subtracted (Supporting Information). Between 20.6 and \SI{32.2}{\degreeCelsius} the intensity at $Q<\SI{0.006}{\angstrom^{-1}}$ rises 190-fold, which indicates a growing population of structures larger than about \SI{100}{\nano\meter}. At the lowest temperatures $I(Q)$ is flat at small $Q$, as expected for dispersed chains, and a Guinier analysis of the same construct at 12-ID-B gives an apparent radius of gyration $R_g=22.65\pm\SI{0.50}{\angstrom}$ (Figure~\ref{SI-fig:12id}b).
 
-The comparison of Figure~\ref{fig:static} sets two separate 12-ID-B aliquots against each other. The test in Figure~\ref{fig:cycle} is more direct: one aliquot at 8-ID-I, taken through seven consecutive cycles and compared with itself, so that any difference between cycles can only be irreversibility. The aliquot is a separate loading of the same stock, measured in the 2022-1 beamtime. Each cycle held the sample at \SI{6}{\degreeCelsius}, ramped to \SI{34}{\degreeCelsius} at \SI{1.01}{\degreeCelsius\per\minute} over 270 consecutive \SI{2}{\second} acquisitions, and returned to \SI{6}{\degreeCelsius}, taking \SI{5.8}{\hour} in total. No acquisitions were taken during cooling, so the cooling segments of Figure~\ref{fig:cycle}a are a projection from the fixed control protocol rather than a measurement; every solid segment is measured, once per acquisition, from the RTD of the stage zone holding the cell.
-
-Three states are sampled in every cycle: \SI{6}{\degreeCelsius}, and two windows near the top of each ramp at \SI{31.9}{\degreeCelsius} and \SI{33.8}{\degreeCelsius}. Averaged over $0.004<Q<0.008$~\Ainv, the seven cycles agree to a relative standard deviation of 9\% at \SI{6}{\degreeCelsius} and 5\% at \SI{33.8}{\degreeCelsius}, with no drift from the first cycle to the seventh. At \SI{31.9}{\degreeCelsius} the spread is 33\%, but that reflects where on the ramp each cycle happened to be sampled rather than a difference between cycles: the windows fall between \SI{31.62}{\degreeCelsius} and \SI{32.48}{\degreeCelsius}, which is on the steep part of the transition. Regressing the band-averaged $\ln I$ of each cycle on that cycle's mean window temperature gives $\mathrm{d}\ln I/\mathrm{d}T=\SI{0.95}{\per\degreeCelsius}$ with $r=0.974$, and the spread taken about that line falls to 7\%. The same regression at \SI{33.8}{\degreeCelsius}, past the steep part, takes 5\% to 1\%. The cycles therefore repeat to better than 10\% at every state once the sampling temperature is accounted for.
-
-The correlation functions say what state the sample was in when each was taken (Figure~\ref{fig:cycle}c). At \SI{33.8}{\degreeCelsius} the correlation function shows no resolvable decay anywhere in the accessible window, from $10^{-2}$ to \SI{2}{\second}, in any of the seven cycles: the sample was arrested on every heating. At \SI{31.9}{\degreeCelsius} it decays throughout that same window, so the assembly is still mobile \SI{1.9}{\degreeCelsius} lower. The dashed line in that panel is the measured correlation level of a static reference recorded in the same beamtime, read at the same $Q$ bin. A static sample cannot relax, so its level is the instrumental contrast, and showing it as a curve rather than as a fitted number keeps the comparison between two measurements. The \SI{33.8}{\degreeCelsius} correlation functions sit just below it and the \SI{31.9}{\degreeCelsius} ones fall well away from it. A contrast value is needed to fit a correlation function, which is why a fitted series carries its own calibration; it is not needed to judge whether a sample has arrested, which is what this panel does, so no arrested fraction is quoted from it. No correlation function is shown at \SI{6}{\degreeCelsius}, where the coherent signal at the lowest $Q$ is too weak for any contrast to be resolved.
+On heating, the profiles first show an apparent self-similarity. After rescaling both $I$ and $Q$ by temperature-dependent factors, each profile can be laid onto its predecessor, and the profiles up to \SI{29.6}{\degreeCelsius} collapse onto a common master curve (inset, Figure~\ref{fig:saxs}a). The collapse fails at 30.9 and \SI{32.2}{\degreeCelsius}. Within the self-similar regime, the $Q$-rescaling factors multiplied by the length of the dispersed state, $R_g$, give a characteristic length $\xi(T)$, which grows from \SI{2.3}{\nano\meter} at \SI{20.6}{\degreeCelsius} to \SI{14}{\nano\meter} at \SI{29.6}{\degreeCelsius} (Figure~\ref{fig:saxs}b). A power law $\xi\propto(T_0-T)^{\gamma}$ describes this growth with $T_0=\SI{30.5}{\degreeCelsius}$ and $\gamma=-0.80\pm0.04$, so the length diverges at a temperature between the last collapsing profile and the first one that does not.
 
 \begin{figure}[htbp]
   \centering
-  \acsfig{Figure2_Thermal_Cycle.pdf}
-  \caption{Thermal-cycling repeatability of the SA-XPCS sample: one aliquot through seven consecutive cycles. (a) Sample temperature over the \SI{5.8}{\hour} sequence. Solid curves are measured: the stage RTD was read once per \SI{2}{\second} acquisition. No acquisitions were taken while the sample cooled, so no temperature was recorded over those intervals; the dashed curves there are not data but the profile projected from the control protocol, which was fixed at \SI{10}{\degreeCelsius\per\minute} cooling until \SI{6}{\degreeCelsius} followed by a hold at \SI{6}{\degreeCelsius} until the next ramp. Open symbols mark, at the time and temperature at which it was taken, every acquisition group that is plotted in (b) and (c), so each lower-panel curve can be traced to its point in the thermal history. (b) Buffer-subtracted SAXS on an absolute scale at \SI{6}{\degreeCelsius} (circles, 32--41 surviving acquisitions averaged; see the text), \SI{31.9}{\degreeCelsius} (squares, acquisitions 241--250) and \SI{33.8}{\degreeCelsius} (triangles, acquisitions 261--270). Each group is placed on the absolute scale with the mean ion-chamber readings of the acquisitions it contains, and the averaged buffer (69 surviving of 89 acquisitions, D0077 and D0080) is subtracted with no empirical scale factor. (c) Correlation functions at the lowest $Q$ bin for the two high-temperature states. The dashed line is the measured correlation level of a static reference recorded in the same beamtime and read at the same $Q$ bin; a static sample cannot relax, so that level is the instrumental contrast. Both are measurements on one axis, so no calibration is imported and none is quoted. The \SI{33.8}{\degreeCelsius} curves run flat just below the line across four decades of delay, which is arrest; the \SI{31.9}{\degreeCelsius} curves decay away from it, which is not. Error bars are the measured pointwise $g_2$ uncertainties; the $y$ axis is capped so that a few short-delay caps clip. One key serves all three panels: its columns are the seven thermal cycles, numbered along the top and colored on a single scale, and its rows are the three temperature states, labeled at the left and distinguished by marker shape.}
-  \label{fig:cycle}
+  \acsfig{Figure2_SAXS_Scaling.pdf}
+  \caption{Evolution of structure during thermally induced gelation of \VP{30}. (a) Buffer-subtracted SAXS intensity $I(Q,T)$ on the absolute scale at the ten temperatures of the heating ramp, each the average of one section of about 120 acquisitions. Dashed lines are fits of the generalized Lorentzian $I=I_0/[1+(\xi Q)^{\eta}]$ with $\eta=1.67$ held fixed, to every profile except the hottest. The dotted line is the same function with $\eta$ free, fitted to the \SI{32.2}{\degreeCelsius} profile at $Q\geq\SI{0.008}{\angstrom^{-1}}$, which gives $\eta=2.92\pm0.02$. Inset: the profiles up to \SI{29.6}{\degreeCelsius}, each rescaled in $Q$ and $I$ onto its predecessor by minimizing the mean squared difference in $\log I$, plotted against $Q\xi(T)$ and normalized by the lowest-$Q$ intensity of the \SI{20.6}{\degreeCelsius} profile. The fixed $\eta$ is the slope of $\ln(I_{\max}/I-1)$ against $\ln Q$ over this master curve, with $I_{\max}$ its highest intensity. (b) Characteristic length $\xi(T)=R_g\,s(T)$, where $s(T)$ is the cumulative $Q$-rescaling factor and $R_g=22.65\pm\SI{0.50}{\angstrom}$ is the Guinier radius of the dispersed chains (Figure~\ref{SI-fig:12id}b), against $T_0-T$. The dashed line is the least-squares power law $\xi\propto(T_0-T)^{\gamma}$ in log--log coordinates, with $T_0$ chosen to minimize the residual. Error bars are the uncertainty of $R_g$, which is common to all points. The key identifies the temperatures in both panels.}
+  \label{fig:saxs}
 \end{figure}
 
+To rationalize the evolution of $I(Q,T)$, we describe the profiles with a generalized Lorentzian, $I=I_0/[1+(\xi Q)^{\eta}]$. This form has been used for liquid--liquid phase separation in aqueous--oil--surfactant ternaries approaching criticality,\cite{Sheyfer2020-yb} and it is motivated by the model H dynamics of binary liquids.\cite{Hohenberg1977-os} At low and intermediate temperatures it describes the data well, consistent with the collapse in the inset of Figure~\ref{fig:saxs}a, and a linear regression of the master curve gives $\eta=1.67$. At higher $Q$ and higher temperature, systematic deviations appear and two regimes coexist: a low-$Q$ region with $\eta\approx1.67$, and a steeper high-$Q$ decay, for which a fit of the \SI{32.2}{\degreeCelsius} profile gives $\eta=2.92\pm0.02$. Exponents between 1 and 3 are characteristic of mass-fractal aggregates, and the steeper decay indicates a denser structure on the shorter length scales.\cite{Teixeira1988-jac} The departure from a single $\eta$, together with the breakdown of the collapse, shows that the network is no longer self-similar across scales and develops a hierarchical architecture. Such a network can support motion on two scales, rapid rearrangement of dense local strands and slow collective motion of the network as a whole, which anticipates the two dynamical modes described next.
 
-Whether the assembly comes apart again is a question about rate as much as
-about temperature, and the two have to be separated before either can be read.
-Three chain lengths, \VPAVG{} and its twenty- and ten-repeat counterparts, were
-taken from \SI{20}{\degreeCelsius} up and immediately back down on one stage,
-each reaching a different ceiling because one protocol meets three different
-phase diagrams: 45.2, 41.4 and \SI{33.1}{\degreeCelsius} for ten, twenty and
-thirty repeats (Figure~\ref{fig:ramps}). On the way up all three build low-$Q$
-intensity and all three lose the decay of $g_2$, so all three assemble and
-arrest.
-
-None of them comes back down the way it went up. Averaged over
-$0.004<Q<0.008$~\Ainv, the cooling branch at \SI{25}{\degreeCelsius} and below
-stands 8.4, 15.7 and 3.6 times the heating branch for ten, twenty and thirty
-repeats, while at the top of each ramp the two branches agree to within 2 to
-19\%. The hysteresis is therefore in the cold state alone, and it does not
-order with chain length. A ramp that spends about twenty-five minutes between
-the ceiling and \SI{20}{\degreeCelsius} simply does not give the assembly time
-to come apart, whatever the sequence. The hysteresis of a cooling ramp is a
-statement about rate, and on its own it says nothing about whether the
-transition is reversible.
-
-What the sequence decides shows up once the cold state is given time, and then
-the three part company. Held at \SI{6}{\degreeCelsius} between cycles, \VPAVG{}
-returns to the same \SI{6}{\degreeCelsius} profile to within a 9\% relative
-standard deviation through seven heating and cooling cycles, with no drift from
-the first to the seventh (Figure~\ref{fig:cycle}), and two aliquots of the same
-stock, one cycled more than ten times and one never heated, overlap at
-\SI{10}{\degreeCelsius} (Figure~\ref{fig:static}). The ten-repeat construct does
-not recover at all: a cell loaded with it and left in a refrigerator at
-\SI{4}{\degreeCelsius} for more than forty-eight hours after a single ramp is
-still visibly opaque, against the sixty seconds in which \VPAVG{} clears
-(Video~S1). Two days is five orders of magnitude longer than the sixty seconds
-\VPAVG{} needs and three orders longer than the cooling ramp, so the difference
-between the two constructs is not a slower rate but a different outcome.
-
-Taken together the two observations separate cleanly. Ramp hysteresis is
-universal and kinetic: every chain length shows it, it lives only in the cold
-state, and it reflects how fast the ramp was run. Reversibility is
-sequence-encoded: given time, thirty repeats come apart and ten do not. It is
-the second that makes the $\beta$-sheet-like contacts of \VPAVG{} a candidate
-physical junction rather than a terminal aggregate, and the first that explains
-why a single cooling ramp cannot be used to test for it.
+The XPCS measurements resolve these modes. Figure~\ref{fig:arrest} shows the evolution of $g_2(Q,\Delta t)$ of \VP{10} at $Q=\SI{0.0038}{\angstrom^{-1}}$, a length scale $2\pi/Q$ of \SI{167}{\nano\meter}, during the heating ramp. At \SI{21.3}{\degreeCelsius}, $g_2$ decays completely within a few milliseconds, indicating mobile structures. With increasing temperature the dynamics slow down markedly, and at \SI{44.0}{\degreeCelsius} $g_2$ falls by less than 0.04 over the whole \SI{2}{\second} window: the network has arrested. At intermediate temperatures, before complete arrest, $g_2$ decays in two distinct steps.
 
 \begin{figure}[htbp]
   \centering
-  \acsfig{Figure3_Chain_Length_Ramps.pdf}
-  \caption{Three chain lengths through one thermal ramp, heating and cooling.
-Columns are \VPAVG{} with ten, twenty and thirty repeats. (a)--(c)
-background-subtracted $I(Q)$ on the absolute scale; (d)--(f) the intensity
-autocorrelation function at the lowest measured $Q$, the largest length scale.
-Solid lines and filled markers are the heating ramp, dashed lines and open
-markers the cooling ramp that followed it immediately. Colour is temperature on
-one scale shared by every panel, so a colour means the same temperature
-throughout; the ceiling differs between samples because one protocol was
-applied to three materials. Each curve averages the acquisitions falling in a
-\SI{2}{\degreeCelsius} window, through the same two outlier cuts every other
-group in this work receives. The cooling branch lies above the heating branch
-at low temperature in all three samples, by 8.4, 15.7 and 3.6 times over
-$0.004<Q<0.008$~\Ainv{} below \SI{25}{\degreeCelsius}; the branches meet again
-at the top of each ramp. That hysteresis is a rate effect common to all three
-and is not what distinguishes them; the held measurements of
-Figure~\ref{fig:cycle} and Video~S1 are. The absolute scale carries a common factor of about
-6\% from the transmission, which is taken from a different beamtime because
-2021-2 recorded no downstream ion chamber; it is the same factor for all three
-samples and moves no feature within a profile.}
-  \label{fig:ramps}
+  \acsfig{Figure3_Dynamic_Arrest.pdf}
+  \caption{Arrest of dynamics during thermally induced gelation of \VP{10}. Intensity autocorrelation functions $g_2(Q=\SI{0.0038}{\angstrom^{-1}},\Delta t)$ during heating at \SI{0.10}{\degreeCelsius\per\minute} from 20.0 to \SI{45.2}{\degreeCelsius}. Each curve averages one section of 278 consecutive acquisitions spanning \SI{2.5}{\degreeCelsius}, and the key gives the mean temperature of each section. At low temperature $g_2$ decays completely within milliseconds; at the highest temperatures it barely decays within the \SI{2}{\second} window, the signature of an arrested gel.}
+  \label{fig:arrest}
 \end{figure}
 
-% ---------------------------------------------------------------------------
-% TO BE WRITTEN once the 28 Oct / Monday correlations are reduced:
-%   * FIGURE NEEDED: the (VPAVG)10 cell photograph, before the ramp and after
-%     >48 h at 4 C, showing it still opaque.  It is Figure S5 of the AdvMat SI
-%     and exists in no repository here, so it has to be added by hand as
-%     manuscript/figures/FigureS1_Irreversibility.png and the float below
-%     uncommented.  The text already states what it shows.
-% \begin{figure}[htbp]
-%   \centering
-%   \includegraphics[width=0.7\linewidth]{FigureS1_Irreversibility.png}
-%   \caption{Irreversibility of the ten-repeat construct. The same cell before
-% the thermal ramp (left) and after more than forty-eight hours at
-% \SI{4}{\degreeCelsius} following it (right). The persistent opacity is the
-% assembly failing to dissolve, against the sixty seconds in which \VPAVG{}
-% clears.}
-%   \label{fig:irrev}
-% \end{figure}
-%   * the automated cell assembly, Video S2 and Figure S1b
-% See MONDAY_TODO.md.
-% ---------------------------------------------------------------------------
+The two-step decay appears in all three samples and points to coexisting fast and slow dynamics at intermediate stages of gelation. As Figure~\ref{fig:twostep} shows, it is described quantitatively by a superposition of two stretched exponentials.\cite{Bahadur2019-ln,Rao2021-br} For a given $Q$,
+\begin{align}
+  g_2(\Delta t) &= 1+\beta\, g_1^2(\Delta t), \\
+  g_1(\Delta t) &= a_1\exp\!\left[-(\Delta t/\tau_1)^{p_1}\right]+(1-a_1)\exp\!\left[-(\Delta t/\tau_2)^{p_2}\right],
+\end{align}
+where $g_1$ is the normalized intermediate scattering function, $\tau_1$ and $\tau_2$ are the characteristic times of the fast and slow modes, $p_1$ and $p_2$ describe the breadth of their distributions, and $a_1$ is the fraction of the decay carried by the fast mode. The contrast $\beta$ is set by the coherence of the beam and was taken for each sample from the short-delay level of $g_2$. The fitted parameters are listed below Figure~\ref{fig:twostep}. The fast mode of \VP{10} is an order of magnitude slower than those of \VP{20} and \VP{30}, \SI{11}{\milli\second} against 1.2--\SI{1.3}{\milli\second}, while its weight $a_1$ lies in a similar range, 27--34\%, in all three. The slow times of \VP{20} and \VP{30} lie far outside the measurement window and serve only as effective descriptors of the long-lived component. Furthermore, the dynamics of \VP{20} and \VP{30} at the same temperature nearly coincide, even though \VP{20} was eventually heated \SI{8.6}{\degreeCelsius} further before it arrested (Figures~\ref{SI-fig:ramp20} and \ref{SI-fig:ramp30}). This indicates a common dynamic process during the gelation of these ELPs.
 
-\section*{Materials and Methods}
-To be assembled from the pre-split Letter (tag \texttt{pre-split} in
-PubCode-2021-IDPP): the 12-ID-B paragraph, the 8-ID-I cell and beam description,
-and the robotic cell-assembly method.
+\begin{figure}[htbp]
+  \centering
+  \acsfig{Figure4_Two_Step_Decay.pdf}
 
-\section*{Supporting Information}
-Recombinant synthesis and purification; sample environments and the automated
-cell assembly; SAXS/WAXS calibration and merging; Guinier analysis; chain-length
-ramps; seven-cycle thermal repeatability; irreversibility of the ten-repeat
-construct; videos of the reversible transition and of the robotic assembly~(PDF,
-MP4).
+  \vspace{0.6em}
+  \small
+  \input{Table_Two_Step_Fit.tex}
+  \caption{Two-step decay in the dynamics of \VP{10}, \VP{20} and \VP{30} near \SI{31.2}{\degreeCelsius}. The plotted quantity is $g_1^2=(g_2-1)/\beta$ at $Q=\SI{0.0038}{\angstrom^{-1}}$, with $\beta$ = 0.19, 0.195 and 0.135 from the short-delay level of $g_2$ of each sample. Solid lines are fits of $g_1=a_1\exp[-(\Delta t/\tau_1)^{p_1}]+(1-a_1)\exp[-(\Delta t/\tau_2)^{p_2}]$ weighted by the measured uncertainties, and the table lists the fitted parameters. Each curve averages one section of its heating ramp: 120, 107 and 52 acquisitions.}
+  \label{fig:twostep}
+\end{figure}
+
+Despite the similar dynamics during gelation, the reversibility of the gel depends strongly on chain length (Figures~\ref{SI-fig:ramp10}--\ref{SI-fig:ramp30}). The structures formed by \VP{10} do not dissolve during the cooling ramp: $I(Q)$ and $g_2$ remain locked in. At the end of cooling the low-$Q$ intensity is still 17 times its value at the start of heating, and $g_2$ stays flat. \VP{20} behaves the same way, ending at 27 times its initial intensity. The irreversibility of \VP{10} persists well beyond the SA-XPCS time window: the cell remained optically opaque after more than \SI{48}{\hour} at \SI{4}{\degreeCelsius} (Figure~\ref{SI-fig:irrev}). \VP{30}, in contrast, recovers much of its structure and dynamics during cooling. Its low-$Q$ intensity falls from 190 to 5 times the initial value, and below about \SI{24}{\degreeCelsius} $g_2$ decays again within the window. After storage at \SI{4}{\degreeCelsius} for more than \SI{24}{\hour} the recovery is complete. At 12-ID-B, an aliquot that had been through more than ten heating and cooling cycles gives the same \SI{10}{\degreeCelsius} profile as an aliquot that was never heated, the dispersed state of $R_g=22.65$~\AA{} (Figure~\ref{SI-fig:12id}a). The thermal history is thus erased. Video~\ref{SI-vid:reversible} supports the same conclusion: touching a capillary of \VP{30} triggers gelation, and the structures dissolve within about a minute once the heat source is removed.
+
+We interpret the thermally induced gelation of \VP{x} at these high protein concentrations, about \SI{100}{\milli\gram\per\milli\liter} or 10\% by volume, as arrested phase separation,\cite{Glassman2015-cw} and more specifically as gelation driven by viscoelastic phase separation.\cite{Tanaka2000-qq} The stages of this process are sketched in Figure~\ref{fig:setup}. In Tanaka's framework for dynamically asymmetric mixtures, the viscosity of the solvent is much lower than that of the protein phase, so the solvent separates out first as ``solvent holes'' (stage i). As phase separation progresses, the holes grow and impinge (stage ii), producing a spatially percolating protein-rich skeleton (stage iii). Continued heating through the LCST strengthens hydrophobic association, expels more water and densifies the skeleton until interfacial stresses halt coarsening (stage iv).\cite{Tanaka2006-tz} This pathway is consistent with the SAXS. At first the profiles collapse onto a single-length scaling form without a structure-factor peak in the measured $Q$ window. At higher temperature the collapse breaks down into a low-$Q$ region with $\eta\approx1.7$ and a steeper high-$Q$ region with $\eta\approx2.9$, the hierarchical connectivity also seen in other networks of thermoresponsive ELPs formed by arrested phase separation.\cite{Urosev2020-mi} The microscopic driving force is the increase of side-chain hydrophobicity with temperature\cite{Wolfenden2015-as} and the accompanying desolvation-driven association of the VPAVG segments,\cite{Glassman2015-cw} which bias the system toward densification and arrest.
+
+The dynamics resolved by XPCS are consistent with this structural evolution. As the gel forms, $g_2$ develops a pronounced two-step decay: a fast relaxation at short delays followed by a much slower decay that approaches arrest. In associative protein networks, single-chain relaxation proceeds through Zimm-like segmental motion and subsequent center-of-mass diffusion; neutron spin-echo measurements place the Zimm crossover at nanoseconds, with a high-$Q$ relaxation time that scales as $Q^{-3}$.\cite{Rao2020-qr} The fast relaxation seen by XPCS appears at far longer delays, 1--\SI{10}{\milli\second}. Together with the hierarchical structure resolved by SAXS, this points to a fast mode arising from local rearrangement of fibrils or microdomains within the densifying protein skeleton, which decorrelates the speckle without requiring escape of whole chains. We attribute it to this reconfiguration because it slows continuously while the SAXS shows the network developing. The slower mode corresponds to collective, junction-mediated relaxation and the eventual arrest of the network. A similar decoupling of local and collective dynamics has been reported in Laponite clay gels\cite{Chen2020-fn} and in the pressure-induced gelation of lysozyme.\cite{Moron2022-nn} The fast and slow modes therefore reflect an interplay between local stress relaxation and large-scale consolidation of the network, which marks the transition from fluid-like to arrested viscoelastic behavior.
+
+In summary, SA-XPCS with short exposures at fresh positions follows the thermally induced gelation of three sequence-defined ELPs through the formation of a hierarchical network and the arrest of its dynamics. The gelation pathway is shared by all three chain lengths, while the reversibility of the gel is set by chain length: ten and twenty VPAVG repeats remain arrested on cooling, and thirty repeats return to the dispersed state.
+
+\section*{Methods}
+
+\textbf{Samples.} ELPs with 10, 20 and 30 repeats of the pentapeptide VPAVG were cloned by overlap-extension rolling-circle amplification,\cite{Amiram2011-la} expressed in \textit{E.~coli}, purified by immobilized metal affinity chromatography, and exchanged into \SI{20}{\milli\Molar} HEPES (pH 8.0), \SI{250}{\milli\Molar} NaCl and \SI{2}{\milli\Molar} DTT at about \SI{100}{\milli\gram\per\milli\liter}. The procedures are given in the Supporting Information.
+
+\textbf{SA-XPCS.} Measurements were made at beamline 8-ID-I of the Advanced Photon Source, \VP{10} and \VP{20} in July 2021 and \VP{30} in March 2022, with the same cell, stage and protocol. A partially coherent beam of \SI{10.94}{\kilo\electronvolt} with an incident flux of 1.6--\SI{1.9e10}{photons\per\second} was focused to about \SI{10}{\micro\meter} $\times$ \SI{10}{\micro\meter} at the sample. Scattering was recorded \SI{7.8}{\meter} downstream by a photon-counting detector (XSPA-500k)\cite{Nakaye2021-oc} at \SI{52}{\kilo\hertz}, 100{,}000 frames per acquisition, every acquisition at a previously unexposed position. $g_2$ was computed with the multi-tau algorithm, and $I(Q)$ by temporal and azimuthal averaging; the absolute-scale calibration, the averaging and the radiation-damage controls are described in the Supporting Information.
+
+\textbf{SAXS/WAXS.} Two aliquots of \VP{30} in \SI{2}{\milli\meter} quartz capillaries were measured at \SI{10}{\degreeCelsius} and \SI{30}{\degreeCelsius} at beamline 12-ID-B of the Advanced Photon Source by simultaneous SAXS and WAXS at \SI{13.3}{\kilo\electronvolt}.\cite{APS12IDB,Xu2022-12IDB,Zheng2022-12IDB}
+
+\begin{suppinfo}
+Recombinant synthesis and purification, and the oligonucleotide sequences;
+sample cells and the automated cell assembly; SA-XPCS reduction and
+absolute-intensity calibration; structure and dynamics of all three chain
+lengths on heating and cooling; 12-ID-B reversibility and Guinier analysis;
+irreversibility of \VP{10}; molecular dynamics of a \VP{30} array;
+radiation-damage controls; code and data availability; AI-assisted
+development (PDF). Videos of the reversible transition in \VP{30} and of the
+robotic cell assembly (MP4).
+\end{suppinfo}
+
+\begin{acknowledgement}
+This research was supported by Laboratory Directed Research and Development funding (LDRD 2021-0138) from Argonne National Laboratory, provided by the Director, Office of Science, of the U.S. Department of Energy under Contract No. DE-AC02-06CH11357. The SA-XPCS and SAXS measurements were performed at beamlines 8-ID-I and 12-ID-B of the Advanced Photon Source, a U.S. Department of Energy (DOE) Office of Science User Facility operated for the DOE Office of Science by Argonne National Laboratory under Contract No. DE-AC02-06CH11357. The robotics work was supported by the U.S. Department of Energy Biopreparedness Research Virtual Environment (BRaVE) initiative under Contract No. DE-AC02-06CH11357. Q.Z. and D.O. are grateful for the expert technical assistance of Raymond Ziegler. Q.Z. thanks Professor Mark Sutton for insightful discussions.
+
+\textbf{AI-assisted manuscript and code preparation.} The authors used Anthropic's Claude models, accessed through Argo, Argonne National Laboratory's internal generative AI interface, to assist with manuscript preparation and with development of the data-analysis and figure-generation code. That code and the reduced data it operates on are publicly available at \url{https://github.com/qzhang234/PubCode-2021-IDPP-Reversibility}, so the reported results can be regenerated and checked independently. The authors take full responsibility for all manuscript content and reported results.
+\end{acknowledgement}
+
+The authors declare no competing financial interest.
 
 \section*{Data and Code Availability}
 Reduced data and analysis code are at

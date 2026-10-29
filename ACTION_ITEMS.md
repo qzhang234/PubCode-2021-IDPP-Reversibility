@@ -1,5 +1,15 @@
 # Paper B — what to measure next, and why
 
+> **29 Oct 2026, later the same day: the manuscript was rewritten.** It now
+> reproduces the figure set of the Overleaf version (AdvMat/ACS PDFs in
+> `Archive/Overleaf/`), regenerated from committed data, under the Overleaf
+> title "Thermally Reversible and Microscopically Tunable Gelation in
+> Recombinant Polypeptides"; main.tex 17 pp, si.tex 18 pp. See README.md for
+> the figure map and where the reproduction departs from the Overleaf figures.
+> The description of Paper B below, and the beta-sheet framing of the
+> experiment, refer to the version before the rewrite, which is in the git
+> history and whose figures build with `make previous-figures`.
+
 Written 29 Oct 2026, after the split. This replaces MONDAY_TODO.md, whose
 correlation and reduction tasks are all done.
 
@@ -132,24 +142,20 @@ three points on one axis.
 
 ## 5. Manuscript tasks, independent of any new measurement
 
-- [ ] **The (VPAVG)10 irreversibility photograph.** Confirmed sound, and the
-      text already states what it shows, but the image is in the AdvMat SI and
-      no repository here. Drop it in as
-      `manuscript/figures/FigureS1_Irreversibility.png` and uncomment the
-      float that is already in `main.tex`.
-- [ ] **`si.tex` does not exist.** When it does, re-enable
-      `\externaldocument[SI-]{build/si}` at the top of `main.tex` and restore
-      the `\ref{SI-fig:...}` pointers currently flattened to "SI Appendix".
-- [ ] **Materials and Methods** is a placeholder. Assemble from tag
-      `pre-split` in `PubCode-2021-IDPP`: the 12-ID-B paragraph, the 8-ID-I
-      cell and beam description, and the robotic cell assembly.
-- [ ] **The automation material** (Video S2 and the robotic-assembly panel)
-      was requested for this build and is not in. Like the photograph, it
-      exists only in the AdvMat SI.
+- [x] **The (VPAVG)10 irreversibility photograph** is Figure S6
+      (`manuscript/figures/FigureS6_Irreversibility.jpg`, from the ACS SI).
+- [x] **`si.tex`** exists; `main.tex` cross-references it through
+      `\externaldocument[SI-]{build/si}`.
+- [x] **Methods** written: a short section in `main.tex`, details in `si.tex`.
+- [x] **The automation material**: Video S2 stills and the robotic-assembly
+      cell (Figure S1b), with the robotics methods in `si.tex`.
 - [ ] `Plot_12ID.py` still writes `Figure2_SAXS_WAXS.pdf` and the Makefile
       copies it to `Figure1_...`; `thermal_cycle.py` likewise writes
-      `FigureS4_...` and it is moved to `Figure2_...`. Rename the outputs in
-      the scripts and drop the copies.
+      `FigureS4_...` and it is moved to `Figure2_...`. These now build only
+      under `make previous-figures`.
+- [ ] **Molecular dynamics (Figure S7)** has no methods: force field,
+      software, box and run length are not in any source here.
+- [ ] **Video S1 and S2** link to one Box URL; check that it still serves both.
 
 ---
 
