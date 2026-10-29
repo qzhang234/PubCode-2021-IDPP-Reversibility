@@ -170,11 +170,13 @@ Introduction/Results/Discussion/Materials and Methods order.
       written the cover letter cites both as other people's prior work.
 - [ ] SI figure labels still read `fig:S5`..`fig:S11` for figures now numbered
       S2..S8. LaTeX numbers them correctly; only the source keys are stale.
-- [x] The absolute-scale calibration figure now lives in **neither**. It was
-      the last thing in A reading the 2022-1 data, so it came out of A's SI and
-      A's two pointers cite this paper instead. **B must therefore show it**:
-      `saxpcs.py` still writes `FigureS5_Calibration.pdf` from `data/`, so add
-      it to B's SI when `si.tex` is written.
+- [x] The absolute-scale calibration **stays in paper A**, as Figure S2, built
+      by the new `analysis/SAXPCS_8id/calibration_figure.py`. That script reads
+      **no data files**: every point is a constant of `abs_xsec.py`, because
+      the calibration was measured on the ion chambers and never lived in the
+      2022-1 averaged files. So A keeps the figure that documents its own
+      absolute scale while owning none of the moved data. B may show the same
+      figure if it wants one; the constants are in its copy of `abs_xsec.py`.
 - [ ] Still open from the audit: `SOURCE_DATE_EPOCH` in the Makefile for
       byte-reproducible figures, and the main text's claim that the 2021-3
       loadings were "held at 6 C for more than 30 min, warmed to 20 C", which
