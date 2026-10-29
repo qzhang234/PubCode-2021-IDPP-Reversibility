@@ -11,6 +11,13 @@ make papers     compile main.pdf into manuscript/build/
 make check      report undefined citations / references / missing figures
 ```
 
+Every data-derived figure regenerates from a clone of this repository alone:
+the averaged 8-ID-I files both figures read are committed, 151 MB of them, so
+no beamline account and no `/gdata` are needed. The two scripts that DO read
+beamline storage, `SAXPCS_8id/restore_dx_metadata_2021-2.py` and
+`ramps/reduce_ramps.py`, produced those committed files and are kept for
+provenance; `make figures` never runs them.
+
 **This paper is mid-rebuild.** `MONDAY_TODO.md` is the authoritative list of
 what exists, what does not, and what has to happen next. Read it first.
 
@@ -21,7 +28,7 @@ what exists, what does not, and what has to happen next. Read it first.
 | `manuscript/` | `main.tex` (builds, 9 pp), `reference.bib`, vendored `texmf/`. No `si.tex` yet. |
 | `analysis/SAXS_12id/` | 12-ID-B reduction and the beta-sheet peak fits -> Figure 1 |
 | `analysis/SAXPCS_8id/` | the 2022-1 seven-cycle data and `thermal_cycle.py`; the 2021-2 metadata repair and correlation runner |
-| `analysis/ramps/` | **empty** — the chain-length reduce/plot scripts go here |
+| `analysis/ramps/` | the chain-length ramps: `reduce_ramps.py` (beamline-only), `plot_ramps.py` -> Figure 3, and the committed `data/` |
 | `analysis/common/` | `acs_style.py`, shared with the other repository |
 | `Archive/` | the pre-split analysis: `Old/` the PRL-era ramps, `New/` the ancestor of the current scripts, `Overleaf/` an earlier ACS submission of the combined paper |
 
