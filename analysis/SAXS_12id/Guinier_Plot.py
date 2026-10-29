@@ -28,43 +28,17 @@ I = df['I(Q)'].values
 # weighted Guinier fit the 12-ID beamline software performs.
 I_err = df['I_err(Q)'].values if 'I_err(Q)' in df.columns else None
 
-# 2. DEFINE GUINIER REGION FOR UNASSEMBLED ELP (~23 A)
-q_min = 0.020
-q_max = 0.055
-
-mask_fit = (Q >= q_min) & (Q <= q_max) & (I > 0)
-if I_err is not None:
-    mask_fit &= (I_err > 0)
-Q_fit = Q[mask_fit]
-I_fit = I[mask_fit]
-
-# 3. PERFORM WEIGHTED GUINIER FIT: ln(I) = intercept + slope * Q^2
-#    slope = -Rg^2/3,  intercept = ln(I0).  Weight each point by 1/sigma_lnI^2
-#    with sigma_lnI = sigma_I / I (error propagation of the log).  This matches
-#    the beamline; an unweighted fit ignores the measured errors and reports an
-#    artificially small uncertainty.
-x = Q_fit**2
-y = np.log(I_fit)
-if I_err is not None:
-    sigma_y = I_err[mask_fit] / I_fit
-else:
-    sigma_y = np.ones_like(y)          # fallback: unweighted (all equal weights)
-
-w = 1.0 / sigma_y**2
-X = np.vstack([x, np.ones_like(x)]).T
-cov = np.linalg.inv(X.T @ (w[:, None] * X))   # covariance (absolute_sigma convention)
-slope, intercept = cov @ (X.T @ (w * y))
-slope_err = np.sqrt(cov[0, 0])
-intercept_err = np.sqrt(cov[1, 1])
-
-# reduced chi^2 as a fit-quality check
-resid = (y - (slope * x + intercept)) / sigma_y
-red_chi2 = np.sum(resid**2) / (len(x) - 2)
-
-R_g = np.sqrt(-3 * slope)
-R_g_err = (3.0 / (2.0 * R_g)) * slope_err     # error propagation of sqrt(-3 slope)
-I_0 = np.exp(intercept)
-I_0_err = I_0 * intercept_err                 # error propagation of exp(intercept)
+# 2-3. WEIGHTED GUINIER FIT over 0.020-0.055 A^-1, the region of the
+#      unassembled ELP (~23 A).  The fit itself lives in guinier.py, shared with
+#      reversibility_12id.py and gelation/saxs_scaling.py.
+from guinier import guinier_fit                              # noqa: E402
+fit = guinier_fit()
+q_min, q_max = fit['q_min'], fit['q_max']
+slope, intercept = fit['slope'], fit['intercept']
+red_chi2 = fit['red_chi2']
+R_g, R_g_err = fit['R_g'], fit['R_g_err']
+I_0, I_0_err = fit['I_0'], fit['I_0_err']
+x = Q[(Q >= q_min) & (Q <= q_max) & (I > 0)] ** 2
 
 print("--- Guinier Fit Results (weighted) ---")
 print(f"I_0: {I_0:.4f} ± {I_0_err:.4f} (arbs., the units of the merged profile)")

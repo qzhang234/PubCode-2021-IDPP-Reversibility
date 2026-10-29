@@ -1,8 +1,11 @@
 """Absolute scattering cross-section calibration (shared helper).
 
-saxpcs.py (Figure S5), thermal_cycle.py (Figure S4b) and
-temperature_series_2021-3.py (Figure 3a and Figures S7-S10a) all import from
-here, so they use identical constants and one per-file coefficient function.
+Every absolute intensity of the paper goes through here: gelation/
+gelation_data.py (Figures 2 and S2-S4, through coef_from_monitors and
+coef_from_monitors_2021_2), ic_calibration.py (Figure S9, the constants
+themselves), and the scripts of the previous version, thermal_cycle.py,
+plot_ramps.py and saxpcs.py.  They therefore use identical constants and one
+coefficient formula.
 
 PROVENANCE: worked out originally in two beamline notebooks, IC_pind4_convert
 and Abs_Scatt_Cross, which are not part of this repository.  The code below is
@@ -112,6 +115,15 @@ def abs_xsec_coef(hf):
     # in some, (1, 1) in others -- so flatten to 1-D and take the first entry.
     up_ic = float(np.asarray(hf[INCIDENT_PATH][()]).ravel()[0])
     dn_ic = float(np.asarray(hf[TRANSMITTED_PATH][()]).ravel()[0])
+    return coef_from_monitors(up_ic, dn_ic)
+
+
+def coef_from_monitors(up_ic, dn_ic):
+    """abs_xsec_coef() for monitor readings already in hand.
+
+    For data whose monitors do not live in the file being plotted, such as the
+    section means that gelation/reduce_gelation.py stores.  Accepts arrays.
+    """
     flux = CAL_A * (up_ic / T_EXP) + CAL_B
     transmission = dn_ic / up_ic / AIR_TRANSMISSION
     return NUM_FRAMES / (T_EXP * flux * transmission * SAMPLE_THICKNESS * DELTA_OMEGA)
@@ -156,6 +168,11 @@ def abs_xsec_coef_2021_2(hf, transmission=TRANSMISSION_2021_2):
     if not np.isfinite(up_ic) or up_ic <= 0:
         raise ValueError('2021-2 incident chamber missing; run '
                          'restore_dx_metadata_2021-2.py --apply first')
+    return coef_from_monitors_2021_2(up_ic, transmission)
+
+
+def coef_from_monitors_2021_2(up_ic, transmission=TRANSMISSION_2021_2):
+    """abs_xsec_coef_2021_2() for an incident reading already in hand."""
     flux = CAL_A * (up_ic / T_EXP) + CAL_B
     return NUM_FRAMES / (T_EXP * flux * transmission * SAMPLE_THICKNESS * DELTA_OMEGA)
 
