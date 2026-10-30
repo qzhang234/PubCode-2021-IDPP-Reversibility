@@ -118,6 +118,8 @@ Each heating and each cooling ramp was cut into consecutive sections of equal ac
 
 In Figures~\ref{fig:ramp10}--\ref{fig:ramp30}, a $g_2$ curve is not drawn when five or more of its 61 points fall outside 1.00--1.25. This omits the seven coldest heating sections and the two coldest cooling sections of \VP{30}, whose coherent intensity at the lowest $Q$ is too weak for a correlation function to be resolved. It also omits one cooling section of \VP{10}, at \SI{26.3}{\degreeCelsius}. In that section, 48 consecutive acquisitions carry a nearly constant $g_2$ of 1.7--1.8 in the lowest $Q$ bin alone, which raises the average to 1.29 there; the cross-correlation cut compares the shapes of the curves rather than their levels and keeps them.
 
+The seven-cycle measurement of Figure~\ref{fig:cycle} was reduced separately, from the October 2026 reprocessing of the 2022 data, in groups defined by acquisition number: each \SI{6}{\degreeCelsius} hold, and two windows of ten acquisitions near the top of each ramp. After the same cross-correlation cut, a second cut removes any acquisition whose mean intensity over 0.004--\SI{0.008}{\angstrom^{-1}} lies more than three robust standard deviations above the median of its group, the scale being 1.4826 times the median absolute deviation and both statistics being recomputed from the survivors until the selection stops changing. A large scatterer drifting through the beam during an acquisition raises only its lowest-$Q$ intensity, which leaves the shape of the curve close to that of the group and passes the cross-correlation cut; the second cut removes such acquisitions. It takes 4, 2, 1, 11, 4, 1 and 1 acquisitions from the seven \SI{6}{\degreeCelsius} groups, 9 from the buffer, and none from the fourteen high-temperature windows.
+
 \subsection{Absolute scattering cross section}
 
 The SAXS intensity is reported as a differential scattering cross section,
@@ -136,7 +138,9 @@ Figures~\ref{fig:ramp10}--\ref{fig:ramp30} show the complete heating and cooling
 
 Video~\ref{vid:reversible} shows the reversible transition in \VP{30} directly. Brief warming of a capillary of \VP{30} by touch turns the solution turbid within about \SI{5}{\second}, and it returns to transparency about \SI{60}{\second} after the heat source is removed.
 
-Two aliquots of the same \VP{30} stock were sealed in \SI{2}{\milli\meter} quartz capillaries for measurement at 12-ID-B. The aliquot labeled Measurement had been through more than ten heating and cooling cycles, and the Reference aliquot had remained at \SI{4}{\degreeCelsius}. Both were measured at 10 and \SI{30}{\degreeCelsius} by simultaneous SAXS and WAXS, and the two detectors' profiles were merged by scaling the WAXS intensity onto the SAXS intensity over their common $Q$ interval.\cite{APS12IDB,Xu2022-12IDB,Zheng2022-12IDB} The two aliquots overlap at both temperatures (Figure~\ref{fig:12id}a), including the two wide-angle peaks near 0.72 and \SI{1.38}{\angstrom^{-1}} that both develop at \SI{30}{\degreeCelsius} and that vanish at \SI{10}{\degreeCelsius}. A Guinier fit of the Reference profile at \SI{10}{\degreeCelsius}, weighted by the propagated uncertainties over $0.020\leq Q\leq\SI{0.055}{\angstrom^{-1}}$ ($Q_{\max}R_g=1.25$), gives an apparent radius of gyration $R_g=22.65\pm\SI{0.50}{\angstrom}$ (Figure~\ref{fig:12id}b). Because the protein concentration is high, it is reported as an apparent $R_g$.
+Two aliquots of the same \VP{30} stock were sealed in \SI{2}{\milli\meter} quartz capillaries for measurement at 12-ID-B. The aliquot labeled Measurement had been through more than ten heating and cooling cycles, and the Reference aliquot had remained at \SI{4}{\degreeCelsius}. Both were measured at 10 and \SI{30}{\degreeCelsius} by simultaneous SAXS and WAXS, and the two detectors' profiles were merged by scaling the WAXS intensity onto the SAXS intensity over their common $Q$ interval.\cite{APS12IDB,Xu2022-12IDB,Zheng2022-12IDB} The two aliquots overlap at both temperatures (Figure~\ref{fig:12id}a). At \SI{30}{\degreeCelsius} both follow a low-$Q$ power law, $I\propto Q^{-3.17}$ for the Reference and $Q^{-3.15}$ for the Measurement over $0.012<Q<\SI{0.040}{\angstrom^{-1}}$, and both develop two broad wide-angle peaks that are absent at \SI{10}{\degreeCelsius}. Each peak was fitted independently with a Gaussian on a linear background, over 0.48--1.00 and 1.18--\SI{1.70}{\angstrom^{-1}}. The peaks lie at 0.717 and \SI{1.383}{\angstrom^{-1}} in the Reference and at 0.743 and \SI{1.356}{\angstrom^{-1}} in the Measurement (Figure~\ref{fig:12id}a, inset). The corresponding spacings, 8.8 and \SI{4.5}{\angstrom}, are compatible with the sheet-to-sheet and strand-to-strand distances of cross-$\beta$-like packing, whose reflections are reported between 8 and \SI{11}{\angstrom} across the fibril direction and at about \SI{4.8}{\angstrom} along it.\cite{Sunde1997-jmb,Sawaya2007-nature} Both peaks are broad, with full widths at half maximum of 0.34 and \SI{0.25}{\angstrom^{-1}} in the Reference, so the ordering extends over correlation lengths $2\pi/\Delta Q$ of only about 19 and \SI{25}{\angstrom}, a few repeat spacings rather than extended cross-$\beta$ crystallites. A Guinier fit of the Reference profile at \SI{10}{\degreeCelsius}, weighted by the propagated uncertainties over $0.020\leq Q\leq\SI{0.055}{\angstrom^{-1}}$ ($Q_{\max}R_g=1.25$), gives an apparent radius of gyration $R_g=22.65\pm\SI{0.50}{\angstrom}$ (Figure~\ref{fig:12id}b). Because the protein concentration is high, it is reported as an apparent $R_g$.
+
+A separate loading of \VP{30} (March 2022) was taken through seven consecutive heating and cooling cycles at 8-ID-I (Figure~\ref{fig:cycle}). In each cycle the sample was held at \SI{6}{\degreeCelsius} for one group of 50 acquisitions, heated from 6.1 to \SI{34.0}{\degreeCelsius} at \SI{1.01}{\degreeCelsius\per\minute} over 270 acquisitions, and cooled at \SI{10}{\degreeCelsius\per\minute} back to \SI{6}{\degreeCelsius}; the whole sequence took \SI{5.8}{\hour}. The \SI{6}{\degreeCelsius} measurement of each cycle began 7 to \SI{41}{\minute} after the end of the preceding ramp. Averaged over 0.004--\SI{0.008}{\angstrom^{-1}}, the \SI{6}{\degreeCelsius} intensity of the seven cycles has a relative standard deviation of 8.6\%. The first five agree within 3.4\%, and the sixth and seventh lie 11\% and 21\% above their mean, against a 140-fold rise at the top of every ramp. At \SI{33.8}{\degreeCelsius} the cycles agree to 4.8\%, and to 1.4\% once the small differences in the temperature at which each cycle crossed the window are regressed out. At \SI{31.9}{\degreeCelsius} the spread is 33\%, but the windows fall between 31.62 and \SI{32.48}{\degreeCelsius}, on the steep part of the transition, where $\ln I$ tracks the window temperature with $\mathrm{d}\ln I/\mathrm{d}T=\SI{0.95}{\per\degreeCelsius}$ ($r=0.974$); with that trend removed the spread is 7\%. In every cycle, $g_2$ at \SI{33.8}{\degreeCelsius} shows no resolvable decay within the \SI{2}{\second} window and runs just below the correlation level of a static reference measured in the same beamtime, whereas at \SI{31.9}{\degreeCelsius} it decays within the window. The sample therefore arrested on every heating and returned to nearly the same dispersed state on every cooling.
 
 \VP{10} behaves differently. A cell loaded with \VP{10} and taken through the heating ramp of Figure~\ref{fig:ramp10} remained opaque after more than \SI{48}{\hour} at \SI{4}{\degreeCelsius} (Figure~\ref{fig:irrev}).
 
@@ -212,20 +216,27 @@ The reduced data and the code that turns them into every data-derived figure of 
 \begin{figure}[p]
   \centering
   \acsfig{FigureS5_12ID_Reversibility.pdf}
-  \caption{Reversibility of thermally induced gelation in \VP{30}, from SAXS and WAXS at APS 12-ID-B. (a) Merged SAXS and WAXS profiles of two aliquots of the same stock in \SI{2}{\milli\meter} quartz capillaries, at 10 and \SI{30}{\degreeCelsius}. The Measurement aliquot (markers) had been through more than ten heating and cooling cycles; the Reference aliquot (lines) had remained at \SI{4}{\degreeCelsius}. (b) Guinier plot of the Reference aliquot at \SI{10}{\degreeCelsius} with the weighted fit over $0.020\leq Q\leq\SI{0.055}{\angstrom^{-1}}$. The fitted radius of gyration is the characteristic length of the dispersed state used for $\xi(T)$ in Figure~\ref{MT-fig:saxs}b.}
+  \caption{Reversibility and cross-$\beta$-like ordering of \VP{30}, from SAXS and WAXS at APS 12-ID-B. (a) Merged SAXS and WAXS profiles of two aliquots of the same stock in \SI{2}{\milli\meter} quartz capillaries, at 10 and \SI{30}{\degreeCelsius}. The Measurement aliquot (markers) had been through more than ten heating and cooling cycles; the Reference aliquot (lines) had remained at \SI{4}{\degreeCelsius}. The dashed line is the power law fitted to the Reference at \SI{30}{\degreeCelsius} over $0.012<Q<\SI{0.040}{\angstrom^{-1}}$. Inset: the wide-angle region of the same profile (open circles), with independent fits of a Gaussian on a linear background over 0.48--1.00 and 1.18--\SI{1.70}{\angstrom^{-1}} (red curves); the dashed lines and labels mark the fitted peak centers, which correspond to spacings of 8.8 and \SI{4.5}{\angstrom}. (b) Guinier plot of the Reference aliquot at \SI{10}{\degreeCelsius} with the weighted fit over $0.020\leq Q\leq\SI{0.055}{\angstrom^{-1}}$. The fitted radius of gyration is the characteristic length of the dispersed state used for $\xi(T)$ in Figure~\ref{MT-fig:saxs}b.}
   \label{fig:12id}
 \end{figure}
 
 \begin{figure}[p]
   \centering
-  \includegraphics[width=0.85\linewidth]{FigureS6_Irreversibility.jpg}
+  \acsfig{FigureS6_Thermal_Cycle.pdf}
+  \caption{Thermal-cycling repeatability of \VP{30}: one loading through seven consecutive cycles. (a) Sample temperature over the \SI{5.8}{\hour} sequence. Solid curves are measured, the stage RTD being read once per \SI{2}{\second} acquisition. No acquisitions were taken during the last five cool-downs, so no temperature was recorded there; the dashed curves over those intervals are the profile of the control protocol, \SI{10}{\degreeCelsius\per\minute} cooling to \SI{6}{\degreeCelsius} followed by a hold. Open symbols mark every acquisition group plotted in (b) and (c), at the time and temperature at which it was taken. (b) Buffer-subtracted SAXS on the absolute scale at \SI{6}{\degreeCelsius} (circles, 32--41 surviving acquisitions averaged), \SI{31.9}{\degreeCelsius} (squares, acquisitions 241--250 of the ramp) and \SI{33.8}{\degreeCelsius} (triangles, acquisitions 261--270). Each group is scaled by the mean ion-chamber readings of the acquisitions it contains, and the averaged buffer (69 surviving of 89 acquisitions) is subtracted with no empirical scale factor. (c) Correlation functions at the lowest $Q$ bin for the two high-temperature states. The dashed line is the correlation level of a static reference measured in the same beamtime at the same $Q$ bin, the instrumental contrast. The \SI{33.8}{\degreeCelsius} curves run flat just below it across four decades of delay; the \SI{31.9}{\degreeCelsius} curves decay away from it. Error bars are the measured pointwise uncertainties, and the $y$ axis is capped so that a few short-delay error bars clip. The key gives the seven cycles in its columns, on one color scale, and the three temperature states in its rows, distinguished by marker shape.}
+  \label{fig:cycle}
+\end{figure}
+
+\begin{figure}[p]
+  \centering
+  \includegraphics[width=0.85\linewidth]{FigureS7_Irreversibility.jpg}
   \caption{Irreversibility of thermally induced gelation in \VP{10}. (a) The metallic liquid cell containing \VP{10} before the temperature ramp of Figure~\ref{fig:ramp10}. (b) The same cell after the ramp and more than \SI{48}{\hour} in a refrigerator at \SI{4}{\degreeCelsius}. The sample remains opaque.}
   \label{fig:irrev}
 \end{figure}
 
 \begin{figure}[p]
   \centering
-  \includegraphics[width=0.75\linewidth]{FigureS7_MD.png}
+  \includegraphics[width=0.75\linewidth]{FigureS8_MD.png}
   \caption{Molecular dynamics simulation of a $3\times3\times3$ cuboidal array of \VP{30}. (a) Contact timeline between pairs of chains: a bright line marks contact, with simulation time along $x$ and the index of the chain pair along $y$. (b) Snapshot of two chains in contact.}
   \label{fig:md}
 \end{figure}
@@ -248,28 +259,28 @@ The reduced data and the code that turns them into every data-derived figure of 
 
 \begin{figure}[p]
   \centering
-  \acsfig{FigureS9_IC_Calibration.pdf}
+  \acsfig{FigureS10_IC_Calibration.pdf}
   \caption{Conversion of the SAXS intensity to an absolute scattering cross section with the upstream and downstream ion chambers. (a) Photon count measured by a PIN diode against the upstream ion-chamber reading across the attenuation series, with the linear fit used to convert the ion-chamber signal to incident flux. The unattenuated point lies off the line defined by the others and is not shown or fitted. (b) Transmission of the air path between the upstream and downstream ion chambers across the same seven measurements, and its mean.}
   \label{fig:ic}
 \end{figure}
 
 \begin{figure}[p]
   \centering
-  \acsfig{FigureS10_SAXS_Stability.pdf}
+  \acsfig{FigureS11_SAXS_Stability.pdf}
   \caption{SAXS of single acquisitions shows no radiation-induced structural change. $I(Q)$ of the twelve consecutive subsets of 8{,}333 frames of one \SI{100000}{}-frame acquisition of \VP{10}, (a) the first acquisition of the heating ramp, at \SI{20.0}{\degreeCelsius}, and (b) the last, at \SI{45.2}{\degreeCelsius}. Each subset is restored to its own mean intensity and the twelve are placed on the photons-per-pixel-per-frame scale of the whole acquisition.}
   \label{fig:saxsstab}
 \end{figure}
 
 \begin{figure}[p]
   \centering
-  \acsfig{FigureS11_XPCS_Stability.pdf}
+  \acsfig{FigureS12_XPCS_Stability.pdf}
   \caption{XPCS dynamics remain stable throughout an acquisition. $g_2$ at $Q=\SI{0.0038}{\angstrom^{-1}}$ for the ten heating sections of \VP{10} (Figure~\ref{MT-fig:arrest}), correlated from all 100{,}000 frames of each acquisition (circles), from the first 50{,}000 (squares) and from the last 50{,}000 (triangles). The $y$ axis is capped at 0.98, so a few short-delay points of the coldest sections fall below it.}
   \label{fig:xpcsstab}
 \end{figure}
 
 \begin{figure}[p]
   \centering
-  \acsfig{FigureS12_Flux_Control.pdf}
+  \acsfig{FigureS13_Flux_Control.pdf}
   \caption{Varying the X-ray flux does not alter the measured structure or dynamics. (a) SAXS intensity and (b) intensity autocorrelation function of a \SI{20}{\milli\gram\per\milli\liter} \VP{30} sample at four incident fluxes, recovered for each measurement from its upstream ion-chamber reading and keyed in the legend.}
   \label{fig:flux}
 \end{figure}

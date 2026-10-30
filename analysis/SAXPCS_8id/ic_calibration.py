@@ -1,4 +1,4 @@
-"""Figure S9: the ion-chamber calibration behind every absolute intensity here.
+"""Figure S10: the ion-chamber calibration behind every absolute intensity here.
 
 (a) PIN-diode photon count against the upstream ion-chamber readout across the
     attenuation series, with the straight line whose slope and intercept are
@@ -58,4 +58,4 @@ axt.legend(loc='lower left')
 
 label_panels([axc, axt])
 fig.tight_layout(pad=0.4, w_pad=1.6)
-save_fig(fig, 'FigureS9_IC_Calibration.pdf')
+save_fig(fig, 'FigureS10_IC_Calibration.pdf')

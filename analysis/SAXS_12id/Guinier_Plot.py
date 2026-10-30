@@ -1,4 +1,6 @@
-"""Figure S3: Guinier analysis of the 10 C Reference aliquot from 12-ID-B.
+"""Figure S3 of the 28 Oct version: Guinier analysis of the 10 C Reference aliquot.
+
+The present manuscript draws the same fit as Figure S5b (reversibility_12id.py).
 
 Weighted straight-line fit of ln I(q) against q^2 over 0.020 <= q <= 0.055
 A^-1, giving the apparent radius of gyration of the unassembled ELP.  The data

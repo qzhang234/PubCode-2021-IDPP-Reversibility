@@ -28,7 +28,7 @@ optionally after skipping its first few acquisitions.  On a constant-rate ramp
 equal counts are equal temperature steps.
 
     key                 run    sections  skip   used by
-    B039_n10            B039   10        0      Figure 3, Figure S2, S11
+    B039_n10            B039   10        0      Figure 3, Figure S2, S12
     B040_n10            B040   10        0      Figure S2
     T214_n20            T214   20        0      Figure 4, Figure S3
     T215_n20            T215   20        0      Figure S3
@@ -36,8 +36,8 @@ equal counts are equal temperature steps.
     E0111_n10           E0111  10        0      Figure S4
     B039_n20_skip70     B039   20        70     Figure 4
     E0110_n20           E0110  20        0      Figure 4
-    B039_part1_n10      B039   10        0      Figure S11 (frames 1-50,000)
-    B039_part2_n10      B039   10        0      Figure S11 (frames 50,001-100,000)
+    B039_part1_n10      B039   10        0      Figure S12 (frames 1-50,000)
+    B039_part2_n10      B039   10        0      Figure S12 (frames 50,001-100,000)
     D029, D0138         blank / buffer, one section each
 
 OUTLIERS.  Within each section, the cross-correlation cut of
@@ -69,7 +69,7 @@ Exchange archive in October 2026 and are taken from the restore manifests:
 Section monitors are means over the acquisitions that survived the outlier cut,
 the same acquisitions the curves are averaged over.
 
-FIGURE S10 needs one acquisition split into the twelve 8,333-frame subsets the
+FIGURE S11 needs one acquisition split into the twelve 8,333-frame subsets the
 correlator stores in /xpcs/temporal_mean/scattering_1d_segments.  The stored
 subsets are each divided by their own mean detector intensity: across the
 twelve, their level runs opposite to that intensity (correlation 0.8-0.9 over
@@ -116,7 +116,7 @@ DATASETS = {
     'B039_part2_n10':  ('2021-2', 'part2', 'B039',  10, 0,  1),
 }
 
-# Figure S10: the first and the last acquisition of the (VPAVG)10 heating ramp
+# Figure S11: the first and the last acquisition of the (VPAVG)10 heating ramp
 SEGMENT_FILES = ['B039_VPAVG_H02_500C10p_att00_Rq0_00001',
                  'B039_VPAVG_H02_500C10p_att00_Rq0_02780']
 
@@ -274,7 +274,7 @@ def reduce(key, monitors):
 
 
 def segments():
-    """Figure S10: the twelve frame subsets of two acquisitions, in photons/pixel/frame."""
+    """Figure S11: the twelve frame subsets of two acquisitions, in photons/pixel/frame."""
     src = os.path.join(ROOT, '2021-2', 'cluster_results_all')
     path = os.path.join(OUT_DIR, 'B039_segments.h5')
     with h5py.File(path, 'w') as h:

@@ -149,10 +149,11 @@ three points on one axis.
 - [x] **Methods** written: a short section in `main.tex`, details in `si.tex`.
 - [x] **The automation material**: Video S2 stills and the robotic-assembly
       cell (Figure S1b), with the robotics methods in `si.tex`.
-- [ ] `Plot_12ID.py` still writes `Figure2_SAXS_WAXS.pdf` and the Makefile
-      copies it to `Figure1_...`; `thermal_cycle.py` likewise writes
-      `FigureS4_...` and it is moved to `Figure2_...`. These now build only
-      under `make previous-figures`.
+- [x] The seven-cycle thermal cycling is Figure S6 (`thermal_cycle.py` writes
+      `FigureS6_Thermal_Cycle.pdf` directly) and the cross-beta-like WAXS fits
+      are Figure S5a, both added back on 30 Oct. `Plot_12ID.py` still writes
+      `Figure2_SAXS_WAXS.pdf`, copied to `Figure1_...` under
+      `make previous-figures`.
 - [ ] **Molecular dynamics (Figure S7)** has no methods: force field,
       software, box and run length are not in any source here.
 - [ ] **Video S1 and S2** link to one Box URL; check that it still serves both.

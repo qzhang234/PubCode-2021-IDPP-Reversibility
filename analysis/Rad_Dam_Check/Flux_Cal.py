@@ -1,6 +1,6 @@
 """Incident photon flux at 8-ID-I from the calibrated PIN-diode current.
 
-This is the flux-conversion formula behind Figure S12.  Running the file prints
+This is the flux-conversion formula behind Figure S13.  Running the file prints
 the unattenuated full-beam flux for the single PIN-diode reading recorded on
 2025-02-01 (see PINdiode_Calibration_DP00429_2024-02-01.pdf); the per-condition
 fluxes in the figure legend are computed by flux_control.py, which
@@ -30,7 +30,7 @@ loss_factor = loss_mirror*loss_diamond*norm_ring_current
 # 1.6e-19 is e rounded to two digits, 0.14 % below the exact value
 # (e = 1.602176634e-19 C).  That is far inside the uncertainty on the diode
 # responsivity and the loss factors, and it does not move any flux quoted in
-# Figure S12, whose legend carries one digit after the point.
+# Figure S13, whose legend carries one digit after the point.
 ev2J = 1.6e-19                           # electron charge [C]; converts eV -> J
 
 # Calculation of raw and corrected flux

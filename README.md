@@ -9,10 +9,11 @@ Since 29 Oct 2026 the manuscript reproduces the figure set of the Overleaf
 version of the paper (the Advanced Materials and ACS submissions, PDFs in the
 untracked `Archive/Overleaf/`), with every data-derived figure regenerated from
 committed data by the scripts here, which are ports of the original analysis in
-`Archive/Old/` and `Archive/New/`. The previous version of this manuscript
-(beta-sheet WAXS, seven-cycle thermal cycling, chain-length ramps in 2 C
-windows) is in the git history; its figures still build with
-`make previous-figures`. The dynamical companion paper is
+`Archive/Old/` and `Archive/New/`. Two figures of the previous version (28 Oct)
+were added back to the SI on 30 Oct: the cross-beta-like WAXS peak fits of
+12-ID-B, now Figure S5a, and the seven-cycle thermal cycling of 2022-1, now
+Figure S6. The rest of that version, chiefly its chain-length ramps in 2 C
+windows, is in the git history and builds with `make previous-figures`. The dynamical companion paper is
 [PubCode-2021-IDPP](https://github.com/qzhang234/PubCode-2021-IDPP).
 
 ```
@@ -24,10 +25,16 @@ make check      report undefined citations / references / missing figures
 ## Reproducibility
 
 Every figure regenerates from a clone of this repository alone. The reduced
-data are committed: `analysis/gelation/data/` (4 MB, section averages of the
-8-ID-I ramps), `analysis/Rad_Dam_Check/cluster_results/` (the four flux-test
-acquisitions), `analysis/SAXS_12id/reduced_data/` (12-ID-B). `Archive/` is
-local provenance and is never read by `make`.
+data are committed, and none of the figure scripts reads beamline storage:
+
+| Data | Made by | From |
+|---|---|---|
+| `analysis/gelation/data/` (4 MB) | `gelation/reduce_gelation.py` | August 2025 correlation results on `/home/8-id-i/2024-3/...` (raw frames on `/gdata`) |
+| `analysis/SAXPCS_8id/data/` | `SAXPCS_8id/average_ranges.py` | October 2026 reprocessing on `/gdata/s8id-dmdtn/2022-1/` |
+| `analysis/SAXS_12id/reduced_data/` | `SAXS_12id/Read_12ID_SAWAXS.py` | 12-ID-B processed files on `/gdata/s8id-dmdtn/2021-1/` |
+| `analysis/Rad_Dam_Check/cluster_results/` | copied from `Archive/New/` | 2025 flux test, raw on `/gdata/dm/8ID/8IDI/2025-1/` |
+
+`Archive/` is local provenance and is never read by `make`.
 
 `analysis/gelation/reduce_gelation.py` produced `gelation/data/`. It reads the
 per-acquisition correlation results of the August 2025 reanalysis under
@@ -46,13 +53,14 @@ the corner Q bins that the original reader corrupted (below).
 | 2 | `gelation/saxs_scaling.py` | E0110 heating, D0138 buffer; 12-ID-B R_g |
 | 3 | `gelation/g2_arrest.py` | B039 heating |
 | 4 and its table | `gelation/two_step_fit.py` | B039, T214, E0110 in 20 sections |
-| S1, S6, S7, Videos S1-S2 | photographs and drawings, extracted from the Overleaf SI | |
+| S1, S7, S8, Videos S1-S2 | photographs and drawings, extracted from the Overleaf SI | |
 | S2-S4 | `gelation/ramp_si.py` | all six ramps, D029 and D0138 |
-| S5 | `SAXS_12id/reversibility_12id.py` (fit in `guinier.py`) | 12-ID-B, 2021-1 |
-| S8 | typeset in `si.tex` | |
-| S9 | `SAXPCS_8id/ic_calibration.py` | constants in `abs_xsec.py` |
-| S10, S11 | `gelation/stability_si.py` | B039 subsets and half-exposure correlations |
-| S12 | `Rad_Dam_Check/flux_control.py` | E0171-E0174 (2025) |
+| S5 | `SAXS_12id/reversibility_12id.py` (fits in `saxs_waxs_fits.py`, `guinier.py`) | 12-ID-B, 2021-1 |
+| S6 | `SAXPCS_8id/thermal_cycle.py` | 2022-1 B0075-B0090, buffer D0077/D0080, static reference F0145 |
+| S9 | typeset in `si.tex` | |
+| S10 | `SAXPCS_8id/ic_calibration.py` | constants in `abs_xsec.py` |
+| S11, S12 | `gelation/stability_si.py` | B039 subsets and half-exposure correlations |
+| S13 | `Rad_Dam_Check/flux_control.py` | E0171-E0174 (2025) |
 
 ## Where the reproduction departs from the Overleaf figures
 

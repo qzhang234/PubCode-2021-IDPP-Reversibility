@@ -1,13 +1,13 @@
-"""Figures S10 and S11: no structural or dynamical change within an exposure.
+"""Figures S11 and S12: no structural or dynamical change within an exposure.
 
-Figure S10, after the Overleaf Figure S10.  I(Q) of the twelve consecutive
+Figure S11, after the Overleaf Figure S10.  I(Q) of the twelve consecutive
 8,333-frame subsets of one 2 s acquisition, for the first (20.0 C) and the
 last (45.2 C) acquisition of the (VPAVG)10 heating ramp, B039.  The subsets
 are those the correlator stores, multiplied back by their mean intensity and
 put on the photons-per-pixel-per-frame scale of the whole acquisition (see
 reduce_gelation.segments); data/B039_segments.h5.
 
-Figure S11, after Old/H02_RadDam_Check/H02_RampUp_XPCS_Plot_Combined.ipynb.
+Figure S12, after Old/H02_RadDam_Check/H02_RampUp_XPCS_Plot_Combined.ipynb.
 g2 at the lowest Q bin for the ten heating sections of B039, correlated from
 all 100,000 frames of each acquisition (circles), from the first 50,000
 (squares) and from the last 50,000 (triangles); data/B039_n10.h5 and
@@ -35,7 +35,7 @@ from gelation_data import DATA, Q_MAX, load                                 # no
 QI = 0
 apply_style()
 
-# --- Figure S10 ------------------------------------------------------------------
+# --- Figure S11 ------------------------------------------------------------------
 fig, axes = plt.subplots(1, 2, figsize=(DOUBLE_COL, 2.9))
 with h5py.File(os.path.join(DATA, 'B039_segments.h5'), 'r') as h:
     for ax, name in zip(axes, sorted(h)):
@@ -63,9 +63,9 @@ axes[0].legend(title='subset', ncol=3, loc='lower left', handlelength=1.2,
                columnspacing=0.8)
 label_panels(axes)
 fig.tight_layout(pad=0.4, w_pad=1.5)
-save_fig(fig, 'FigureS10_SAXS_Stability.pdf')
+save_fig(fig, 'FigureS11_SAXS_Stability.pdf')
 
-# --- Figure S11 ------------------------------------------------------------------
+# --- Figure S12 ------------------------------------------------------------------
 runs = [('B039_n10', 'o', 'all 100,000 frames'), ('B039_part1_n10', 's', 'first 50,000'),
         ('B039_part2_n10', '^', 'last 50,000')]
 data = [load(k) for k, _, _ in runs]
@@ -102,4 +102,4 @@ axl.add_artist(leg)
 axl.legend(handles=shapes, ncol=3, loc='lower center', handlelength=0.9, columnspacing=0.6,
            handletextpad=0.3)
 fig.subplots_adjust(left=0.17, right=0.97, top=0.98, bottom=0.02)
-save_fig(fig, 'FigureS11_XPCS_Stability.pdf')
+save_fig(fig, 'FigureS12_XPCS_Stability.pdf')

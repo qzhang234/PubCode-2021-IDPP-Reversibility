@@ -12,7 +12,7 @@ It produces two kinds of file:
    group listed in ``FILE_RANGES``.  This is the bulk of the output and the
    original purpose of the script.
 2. The per-acquisition TEMPERATURE TRACE of the thermal-cycling sequence
-   (``TRACE_GROUPS`` -> ``TRACE_CSV``).  Figure S4a plots the temperature of
+   (``TRACE_GROUPS`` -> ``TRACE_CSV``).  Figure S6a plots the temperature of
    every one of its 2325 acquisitions, which is not an average and cannot be
    recovered from the averaged files.
 
@@ -83,7 +83,7 @@ prefix = '/gdata/s8id-dmdtn/2022-1/babnigg202203_nexus/reprocess_results'
 # (inclusive), one averaged file per range.  Usually one range per group.
 
 FILE_RANGES = {
-    # --- Figures 3, S8, S9, S10: the isothermal series and its two references
+    # --- the isothermal series of the companion paper and its two references
     'B0147': [(1, 200),
         (200, 350),
         (351, 500),
@@ -97,7 +97,7 @@ FILE_RANGES = {
     'B0146': [(1, 50)],
     'D0138': [(1, 50)],
 
-    # --- Figure S4: seven thermal cycles of sample S1, 2022-03-04 -----------
+    # --- Figure S6: seven thermal cycles of sample S1, 2022-03-04 -----------
     # Each cycle is a 6 C group of 50 acquisitions followed by a 270-acquisition
     # ramp to 34 C, of which two ten-acquisition windows near the top are used
     # (they land near 31.9 and 33.8 C).  A range simply selects whatever files
@@ -114,7 +114,7 @@ FILE_RANGES = {
     'D0077': [(1, 50)],
     'D0080': [(1, 50)],
 
-    # --- Figure S7: the nano-porous glass speckle-contrast standard ---------
+    # --- the nano-porous glass speckle-contrast standard (Figure S6c) --------
     'F0145': [(1, 50)],
 }
 
@@ -135,7 +135,7 @@ GROUP_SUFFIX = {'F0145': 'BadpixRm'}
 # second cut catches those.
 #
 # The statistic is the per-acquisition mean of I(q) over SPIKE_BAND, the same
-# window Figure S4b reports its intensities over, so the cut introduces no new
+# window Figure S6b reports its intensities over, so the cut introduces no new
 # choice of q range.  Note that it tests the intensity in that band, not the
 # low-q rise as such: an acquisition that is bright across the whole detector
 # fails it too, which is intended.
@@ -154,10 +154,10 @@ GROUP_SUFFIX = {'F0145': 'BadpixRm'}
 #
 # Across the paper the cut removes 35 of the 1749 acquisitions that survive
 # outlier_removal(), 2.0 %.  It is nearly inert on the isothermal series behind
-# Figures 3 and S8-S10, taking 2 acquisitions of B0147, which move that group's
+# the companion paper, taking 2 acquisitions of B0147, which move that group's
 # absolute-scale coefficient by 0.03 % and leave every fitted g2 parameter
 # unchanged.  It takes none at all from the contrast standard F0145.  Its work
-# is on the Figure S4 thermal cycles, where transient scatterers are common:
+# is on the Figure S6 thermal cycles, where transient scatterers are common:
 # 4, 2, 1, 11, 4, 1 and 1 from the seven 6 C groups and 2 and 7 from the two
 # buffers, against none from any of the fourteen 34 C windows.
 SPIKE_BAND = (0.004, 0.008)          # A^-1
@@ -214,7 +214,7 @@ def spike_removal(saxs_1d, q, mask, band=SPIKE_BAND, z=SPIKE_Z):
 MANUAL_EXCLUDE = {}
 
 # Groups whose per-acquisition temperature and time are written to TRACE_CSV,
-# in the order they were measured.  Figure S4a needs every acquisition, not the
+# in the order they were measured.  Figure S6a needs every acquisition, not the
 # group averages, so this is an extraction rather than a reduction.  The
 # temperature is that of the stage zone holding the SAMPLE (qnw1) for every
 # group, buffer acquisitions included: panel (a) is the thermal history of the

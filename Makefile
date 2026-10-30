@@ -4,7 +4,7 @@
 #   make papers            compile main.pdf and si.pdf into manuscript/build/
 #   make check             report undefined citations / references / missing figures
 #   make clean             remove LaTeX aux files
-#   make previous-figures  the three figures of the 28 Oct version of main.tex
+#   make previous-figures  the figures of the 28 Oct version that are not in this one
 #
 # Mirrors the Makefile of PubCode-2021-IDPP: same conda environment, same
 # TEXINPUTS trick so the .tex can name a figure that lives under analysis/,
@@ -42,13 +42,15 @@ T_TWOSTEP := $(GEL)/Table_Two_Step_Fit.tex
 F_RAMPS   := $(GEL)/FigureS2_Ramp_VPAVG10.pdf $(GEL)/FigureS3_Ramp_VPAVG20.pdf \
              $(GEL)/FigureS4_Ramp_VPAVG30.pdf
 F_12ID    := $(S12)/FigureS5_12ID_Reversibility.pdf
-F_IC      := $(XPCS)/FigureS9_IC_Calibration.pdf
-F_STAB    := $(GEL)/FigureS10_SAXS_Stability.pdf $(GEL)/FigureS11_XPCS_Stability.pdf
-F_FLUX    := $(RAD)/FigureS12_Flux_Control.pdf
+F_CYCLE   := $(XPCS)/FigureS6_Thermal_Cycle.pdf
+F_IC      := $(XPCS)/FigureS10_IC_Calibration.pdf
+F_STAB    := $(GEL)/FigureS11_SAXS_Stability.pdf $(GEL)/FigureS12_XPCS_Stability.pdf
+F_FLUX    := $(RAD)/FigureS13_Flux_Control.pdf
 FIGURES   := $(F_SAXS) $(F_ARREST) $(F_TWOSTEP) $(T_TWOSTEP) $(F_RAMPS) $(F_12ID) \
-             $(F_IC) $(F_STAB) $(F_FLUX)
+             $(F_CYCLE) $(F_IC) $(F_STAB) $(F_FLUX)
 ARTWORK   := $(addprefix $(MS)/figures/,Setup.pdf VideoS1_Stills.jpg VideoS2_Stills.jpg \
-             FigureS1_Sample_Cells.jpg FigureS6_Irreversibility.jpg FigureS7_MD.png)
+             FigureS1_Sample_Cells.jpg FigureS7_Irreversibility.jpg FigureS8_MD.png)
+XPCS_DATA := $(wildcard $(XPCS)/data/*.hdf) $(XPCS)/data/thermal_cycle_temperature.csv
 
 .PHONY: all figures papers check clean previous-figures
 
@@ -57,9 +59,11 @@ all: figures papers
 figures: $(FIGURES)
 	@echo "all figures up to date"
 
-# Every rule below reads only what is committed: analysis/gelation/data/ was
-# written by reduce_gelation.py from the August 2025 correlation results and is
-# never rebuilt by make.
+# Every rule below reads only what is committed and never rebuilds it:
+# analysis/gelation/data/ was written by reduce_gelation.py from the August 2025
+# correlation results, analysis/SAXPCS_8id/data/ by average_ranges.py from the
+# October 2026 reprocessing on /gdata, and SAXS_12id/reduced_data/ by
+# Read_12ID_SAWAXS.py from the 12-ID-B files on /gdata.
 $(F_SAXS): $(GEL)/saxs_scaling.py $(GEL_LIB) $(GUINIER) $(call data,E0110_n10 D0138)
 	cd $(GEL) && $(PY) saxs_scaling.py
 
@@ -74,8 +78,13 @@ $(F_RAMPS) &: $(GEL)/ramp_si.py $(GEL_LIB) \
               $(call data,B039_n10 B040_n10 T214_n20 T215_n20 E0110_n10 E0111_n10 D029 D0138)
 	cd $(GEL) && $(PY) ramp_si.py
 
-$(F_12ID): $(S12)/reversibility_12id.py $(GUINIER) $(wildcard $(S12)/reduced_data/*.csv) $(STYLE)
+$(F_12ID): $(S12)/reversibility_12id.py $(S12)/saxs_waxs_fits.py $(GUINIER) \
+           $(wildcard $(S12)/reduced_data/*.csv) $(STYLE)
 	cd $(S12) && $(PY) reversibility_12id.py
+
+$(F_CYCLE): $(XPCS)/thermal_cycle.py $(XPCS)/abs_xsec.py $(XPCS_DATA) $(STYLE) \
+            $(XPCS)/xpcs_fit.py $(XPCS)/nexus_read.py
+	cd $(XPCS) && $(PY) thermal_cycle.py
 
 $(F_IC): $(XPCS)/ic_calibration.py $(XPCS)/abs_xsec.py $(STYLE)
 	cd $(XPCS) && $(PY) ic_calibration.py
@@ -89,26 +98,20 @@ $(F_FLUX): $(RAD)/flux_control.py $(RAD)/Pind_calibration.csv \
 	cd $(RAD) && $(PY) flux_control.py
 
 # --- the 28 Oct 2026 version of main.tex ----------------------------------------
-# Its three figures -- 12-ID-B SAXS/WAXS with the beta-sheet peak fits, the
-# seven-cycle thermal cycling of 2022-1, and the chain-length ramps in 2 C
-# windows -- are not in the present manuscript.  Their scripts and data are kept
-# and still build.
+# Two of its three figures are not in the present manuscript: the 12-ID-B
+# SAXS/WAXS figure as a single panel (its fits are Figure S5a here) and the
+# chain-length ramps in 2 C windows.  Its third, the seven-cycle thermal
+# cycling, is Figure S6.  The scripts and data are kept and still build.
 P_12ID  := $(S12)/Figure1_SAXS_WAXS.pdf
-P_CYCLE := $(XPCS)/Figure2_Thermal_Cycle.pdf
-XPCS_DATA := $(wildcard $(XPCS)/data/*.hdf) $(XPCS)/data/thermal_cycle_temperature.csv
 P_RAMPS := $(ANA)/ramps/Figure3_Chain_Length_Ramps.pdf
 RAMP_DATA := $(wildcard $(ANA)/ramps/data/*.hdf) $(ANA)/ramps/data/trace_2021-2.csv
 
-previous-figures: $(P_12ID) $(P_CYCLE) $(P_RAMPS)
+previous-figures: $(P_12ID) $(P_RAMPS)
 
 # Plot_12ID.py writes Figure2_SAXS_WAXS.pdf, its name in the combined Letter.
-$(P_12ID): $(S12)/Plot_12ID.py $(wildcard $(S12)/reduced_data/*.csv) $(STYLE)
+$(P_12ID): $(S12)/Plot_12ID.py $(S12)/saxs_waxs_fits.py $(GUINIER) \
+           $(wildcard $(S12)/reduced_data/*.csv) $(STYLE)
 	cd $(S12) && $(PY) Plot_12ID.py && cp Figure2_SAXS_WAXS.pdf Figure1_SAXS_WAXS.pdf
-
-# thermal_cycle.py writes FigureS4_Thermal_Cycle.pdf, its name in the combined Letter.
-$(P_CYCLE): $(XPCS)/thermal_cycle.py $(XPCS)/abs_xsec.py $(XPCS_DATA) $(STYLE) \
-            $(XPCS)/xpcs_fit.py $(XPCS)/nexus_read.py
-	cd $(XPCS) && $(PY) thermal_cycle.py && mv FigureS4_Thermal_Cycle.pdf Figure2_Thermal_Cycle.pdf
 
 $(P_RAMPS): $(ANA)/ramps/plot_ramps.py $(XPCS)/abs_xsec.py $(RAMP_DATA) $(STYLE) \
             $(XPCS)/nexus_read.py

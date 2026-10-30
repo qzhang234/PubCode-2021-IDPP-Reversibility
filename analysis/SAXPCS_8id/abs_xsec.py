@@ -2,9 +2,9 @@
 
 Every absolute intensity of the paper goes through here: gelation/
 gelation_data.py (Figures 2 and S2-S4, through coef_from_monitors and
-coef_from_monitors_2021_2), ic_calibration.py (Figure S9, the constants
-themselves), and the scripts of the previous version, thermal_cycle.py,
-plot_ramps.py and saxpcs.py.  They therefore use identical constants and one
+coef_from_monitors_2021_2), ic_calibration.py (Figure S10, the constants
+themselves), thermal_cycle.py (Figure S6), and the scripts of the previous
+version, plot_ramps.py and saxpcs.py.  They therefore use identical constants and one
 coefficient formula.
 
 PROVENANCE: worked out originally in two beamline notebooks, IC_pind4_convert

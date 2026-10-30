@@ -1,4 +1,4 @@
-"""Figure S12: SAXS and XPCS of diluted (VPAVG)30 at four incident fluxes.
+"""Figure S13: SAXS and XPCS of diluted (VPAVG)30 at four incident fluxes.
 
 After the Overleaf Figure S12, and the same figure the companion repository
 draws (PubCode-2021-IDPP, analysis/Rad_Dam_Check/g2_SAXPCS_Rad_Cali.py).  A
@@ -105,4 +105,4 @@ add_minor_grid(axs[1])
 axs[1].legend(title='Flux on sample')
 label_panels(axs)
 fig.tight_layout(pad=0.4, w_pad=1.4)
-save_fig(fig, 'FigureS12_Flux_Control.pdf')
+save_fig(fig, 'FigureS13_Flux_Control.pdf')

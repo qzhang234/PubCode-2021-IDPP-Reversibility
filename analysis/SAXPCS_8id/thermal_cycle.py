@@ -1,15 +1,17 @@
-"""Figure S4: thermal-cycling repeatability of (VPAVG)30 at 8-ID-I.
+"""Figure S6: thermal-cycling repeatability of (VPAVG)30 at 8-ID-I.
 
 The direct reversibility control for the SA-XPCS experiment: ONE aliquot taken
-through seven consecutive 6 -> 34 -> 6 C cycles.  Figure 2 sets two separate
+through seven consecutive 6 -> 34 -> 6 C cycles.  Figure S5 sets two separate
 12-ID-B aliquots against each other; here every curve is the same material, so
 a difference between cycles could only be irreversibility.
 
-It is NOT the same loading as Figure 3.  This is sample S1, measured 2022-03-04;
-Figure 3 is sample S3_7, measured 2022-03-06.  Both are aliquots of the same
-stock, measured in cell position B of the same nine-position Quantum Northwest
-holder during the same beamtime, but position B was reloaded in between.  Do not
-write "the same aliquot as Figure 3" anywhere.
+It is NOT the same loading as the (VPAVG)30 heating ramp of Figures 2 and S4.
+This is sample S1, measured 2022-03-04 in cell position B; the ramp is sample
+S3_4, measured 2022-03-05 in position E.  (The isothermal series of the
+companion paper, PubCode-2021-IDPP, is a third loading, S3_7, measured
+2022-03-06 in position B after it was reloaded.)  All are aliquots of the same
+stock in the same nine-position Quantum Northwest holder during the same
+beamtime.  Do not write "the same aliquot as Figure S4" anywhere.
 
 This loading was the less completely dissolved of the two: I(0.004)/I(0.02) =
 4.0 against 2.7, and transmission 0.305 against 0.333.  Its 6 C state also
@@ -59,7 +61,8 @@ D-F -> qnw2, G-I -> qnw3), so the B-series sample sits in qnw1 and the D-series
 buffer in qnw2.  qnw2 reads 6.00 C throughout: the buffer was held cold all
 along.
 
-Absolute scale and background subtraction follow Figure 3 exactly.  Each group
+Absolute scale and background subtraction use abs_xsec.py like every other
+absolute intensity of the paper.  Each group
 average is put on an absolute differential cross section by abs_xsec_coef() from
 that group's own mean ion-chamber readings, and the averaged buffer (D0077 +
 D0080, 69 surviving of 89 acquisitions) is subtracted with no empirical scale
@@ -114,8 +117,7 @@ BUFFERS = ['D0077', 'D0080']
 # of each window is measured, not nominal -- see the print-out at the end.
 COLD_RANGE = (1, 50)
 HOT_RANGES = [(241, 250), (261, 270)]
-# Colour encodes the CYCLE.  Figure 3's plasma ramp encodes elapsed time, so the
-# two figures deliberately do not share a colour mapping.
+# Colour encodes the CYCLE.
 # Marker SHAPE encodes the temperature state.  Both are keyed along the bottom.
 # Seven evenly spaced HUES rather than a sequential ramp: cycle number is a
 # label here, not a quantity, and what matters is telling neighbouring curves
@@ -154,8 +156,8 @@ T_HOLD = 6.0                         # C, the temperature held between cycles
 # The residual low-q rise is therefore treated as sample or cell-window
 # scattering, not as mis-subtracted solvent, and is left in.
 #
-# The factor is 1.0 to match Figures 3 and S8, which subtract the buffer with no
-# empirical coefficient at all: there the line is
+# The factor is 1.0, as for every buffer subtraction in this work, which
+# applies no empirical coefficient at all: the line is
 #     I = coef_sam * I_sample - coef_buf * I_buffer
 # with coef_sam and coef_buf the per-acquisition ABSOLUTE-SCALE coefficients
 # from abs_xsec_coef(), not a fitted scale.  Using anything but 1.0 here would
@@ -201,7 +203,7 @@ def load_trace(path):
 
 
 def group(header, lo, hi):
-    """Everything Figure S4 needs from one averaged group.
+    """Everything Figure S6 needs from one averaged group.
 
     q and I(Q) on the absolute scale [mm^-1], the g2 of the lowest q bin with
     its error, the delay times, that bin's q, the mean elapsed time and
@@ -209,12 +211,12 @@ def group(header, lo, hi):
 
     The averaged file was produced by average_ranges.py with the same two
     automatic outlier cuts, the same cutoffs and the same routine applied to
-    the Figure 3 groups; nothing here is reduced by hand.  Its
+    the companion paper's isothermal groups; nothing here is reduced by hand.  Its
     /xpcs/average/file_list names the acquisitions that survived, and every
     quantity reported here is an average over exactly those: the curves, the g2,
     and the time and temperature at which the group is marked on panel (a).
 
-    The absolute scale enters exactly as it does for Figure 3: the averaged file
+    The absolute scale enters exactly as it does for the isothermal series: the averaged file
     carries the mean incident and transmitted intensities of the same surviving
     acquisitions, and abs_xsec_coef() turns those into one coefficient for the
     averaged curve.  (Until the averaging moved into average_ranges.py this
@@ -416,11 +418,12 @@ for y in (T_HOLD, T_MID, T_TOP):
 axS.set_xscale('log')
 axS.set_yscale('log')
 axS.set_xlabel(r'$Q$ ($\AA^{-1}$)')
-q_log_ticks(axS)   # same three named Q ticks as Figure 3a
+q_log_ticks(axS)   # the same three named Q ticks as every 8-ID-I Q axis
 axS.set_ylabel(r'$I(Q)$ (mm$^{-1}$)')
 add_minor_grid(axS)
 axG.set_xscale('log')
-# The shortest delays average only 10 acquisitions (against 63-200 in Figure 3),
+# The shortest delays average only 10 acquisitions (against 63-200 in the
+# companion paper's isothermal series),
 # so their error bars run far outside the correlation itself; the limits show the
 # correlation and let those few caps clip.
 axG.set_ylim(0.94, 1.28)
@@ -455,7 +458,8 @@ axG.annotate('static reference', xy=(0.985, STATIC_LEVEL),
              textcoords='offset points', ha='right', va='bottom', color='0.35')
 
 axG.set_xscale('log')
-# The shortest delays average only 10 acquisitions (against 63-200 in Figure 3),
+# The shortest delays average only 10 acquisitions (against 63-200 in the
+# companion paper's isothermal series),
 # so their error bars run far outside the correlation itself; the limits show the
 # correlation and let those few caps clip.
 axG.set_ylim(0.94, 1.28)
@@ -531,5 +535,5 @@ for ci in range(n_col):
                               ls='none', mfc='none', mec=COLORS[ci], mew=MEW,
                               ms=MS, transform=fig.transFigure, zorder=5))
 
-save_fig(fig, 'FigureS4_Thermal_Cycle.pdf')
+save_fig(fig, 'FigureS6_Thermal_Cycle.pdf')
 plt.show()

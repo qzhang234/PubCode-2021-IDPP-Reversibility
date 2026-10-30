@@ -21,7 +21,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FixedLocator, FixedFormatter
-from scipy.optimize import curve_fit
 import os
 import sys
 
@@ -37,15 +36,9 @@ df_ref30 = pd.read_csv(os.path.join(data_dir, 'Merged_Reference_30C.csv'))
 df_meas10 = pd.read_csv(os.path.join(data_dir, 'Merged_Measurement_10C.csv'))
 df_meas30 = pd.read_csv(os.path.join(data_dir, 'Merged_Measurement_30C.csv'))
 
-def gauss_bg(x, a, x0, sigma, m, c):
-    """A Gaussian peak of height a, centre x0 and width sigma, on the sloping
-    background m*x + c that the wing of the neighbouring scattering leaves under
-    each WAXS peak.
-
-    curve_fit returns the fitted parameters in this same order, so the peak
-    centre is element [1] and its width is element [2] of the result below.
-    """
-    return a * np.exp(-(x - x0)**2 / (2 * sigma**2)) + m * x + c
+# The power-law and peak fits live in saxs_waxs_fits.py, shared with
+# reversibility_12id.py (Figure S5a).
+from saxs_waxs_fits import gauss_bg, power_law, waxs_peaks          # noqa: E402
 
 # 2. EXECUTE PLOT
 apply_style()
@@ -83,17 +76,10 @@ ax.legend(loc='lower left', borderaxespad=0.4,
           handlelength=0.8, handletextpad=0.25)
 
 # --- ADD Q-SCALING FOR REFERENCE 30C ---
-q_ref30_main = df_ref30['Q(A^-1)'].values
-i_ref30_main = df_ref30['I(Q)'].values
 
-# Define the low-Q fitting range for 3D domain scaling
+# Low-Q power law over 0.012 < Q < 0.040 A^-1, fitted in log-log space
 q_min_scale, q_max_scale = 0.012, 0.04
-mask_scale = (q_ref30_main > q_min_scale) & (q_ref30_main < q_max_scale)
-
-# Fit the linear relationship in log-log space
-log_q = np.log10(q_ref30_main[mask_scale])
-log_i = np.log10(i_ref30_main[mask_scale])
-slope, intercept = np.polyfit(log_q, log_i, 1)
+slope, intercept = power_law('Merged_Reference_30C.csv')
 
 # Generate points for the trendline directly through the data
 q_line = np.linspace(q_min_scale, q_max_scale, 50)
@@ -125,9 +111,8 @@ ax_ins.plot(q_ref30[mask], i_ref30[mask], color='k', fillstyle='none', marker='o
 print("\n--- Gaussian Fit Results for Reference 30C WAXS Peaks ---")
 
 # --- FIT PEAK 1 (~0.74 A^-1) ---
-m1 = (q_ref30 > 0.48) & (q_ref30 < 1.00)
-q1, i1 = q_ref30[m1], i_ref30[m1]
-p1_opt, _ = curve_fit(gauss_bg, q1, i1, p0=[np.ptp(i1), 0.74, 0.15, 0, np.min(i1)])
+peaks = waxs_peaks('Merged_Reference_30C.csv')
+p1_opt, q1 = peaks[0]['p'], peaks[0]['q']
 
 print(f"\nPeak 1 (Inter-sheet spacing):")
 print(f"  Position (Q0): {p1_opt[1]:.4f} A^-1  (d = {2*np.pi/p1_opt[1]:.2f} A)")
@@ -138,9 +123,7 @@ print(f"  Width (FWHM):  {2.355 * p1_opt[2]:.4f} A^-1")
 ax_ins.plot(q1, gauss_bg(q1, *p1_opt), 'r-', lw=LW_DATA)
 
 # --- FIT PEAK 2 (~1.44 A^-1) ---
-m2 = (q_ref30 > 1.18) & (q_ref30 < 1.70)
-q2, i2 = q_ref30[m2], i_ref30[m2]
-p2_opt, _ = curve_fit(gauss_bg, q2, i2, p0=[np.ptp(i2), 1.44, 0.15, 0, np.min(i2)])
+p2_opt, q2 = peaks[1]['p'], peaks[1]['q']
 
 print(f"\nPeak 2 (Inter-strand hydrogen bonding):")
 print(f"  Position (Q0): {p2_opt[1]:.4f} A^-1  (d = {2*np.pi/p2_opt[1]:.2f} A)")
