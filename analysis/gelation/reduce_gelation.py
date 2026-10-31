@@ -1,17 +1,30 @@
 """Reduce the 8-ID-I temperature ramps behind the gelation figures into data/.
 
-READS OUTSIDE THIS REPOSITORY.  The per-acquisition correlation results of the
-August 2025 reanalysis, one HDF file per 2 s acquisition, under
+READS /gdata, SO IT RUNS ON AMBER (10.54.116.10; see CLAUDE.md).  Its input is
+the per-acquisition correlation results, one HDF file per 2 s acquisition,
+all correlated from the raw frames on /gdata, against one q-map per beamtime:
+babnigg202107_2_nexus_Sq270_Dq27_Sphi8_Dphi1_q0p0032_Lin_2_BadPixRm.hdf for
+2021-2 and babnigg202203_nexus_Sq270_Dq27_Sphi8_Dphi1_Q0p0032_Lin.hdf for 2022-1:
 
-    /home/8-id-i/2024-3/2024_1228_qz_llps_analysis/2025_08_analysis/
-        2021-2/cluster_results_{all,part1,part2}
-        2022-1/cluster_results_{all,part1,part2}
+    /gdata/s8id-dmdtn/2021-2/babnigg202107_2_nexus/reprocess_results
+    /gdata/s8id-dmdtn/2022-1/babnigg202203_nexus/reprocess_results
+        the October 2026 correlation of every acquisition of the ramps and of
+        the 2022-1 buffer, all 100,000 frames;
+    /home/8-id-i/2024-3/2024_1228_qz_llps_analysis/2026_10_gdata_reanalysis/
+        2021-2_D029, 2021-2_B039_part1, 2021-2_B039_part2
+        what the October run left out -- the 2021-2 water blank, and B039
+        correlated over frames 0-49,999 and 50,000-99,999 -- correlated on
+        Amber by run_gelation_correlations.sh with the same settings.
 
-(`all` correlates all 100,000 frames of an acquisition, `part1` and `part2` the
-first and the second 50,000).  These are the files the Overleaf version of the
-paper was made from, and this script reproduces its binning exactly.  Every
-figure script reads only what this writes into data/, so `make figures` never
-runs it.
+Every figure script reads only what this writes into data/, so `make figures`
+never runs it.
+
+THE OVERLEAF FIGURES were made from an earlier correlation of the same frames,
+the August 2025 reanalysis under /home/8-id-i/2024-3/2024_1228_qz_llps_analysis/
+2025_08_analysis/, which for 2021-2 used the q-map without the two cleared
+pixels.  The version of this script in commit 3e5ce76 read those files and
+reproduced the original section averages exactly in g2 and g2_err for all
+eleven datasets, which is how the port was checked.
 
 THE DATA
 --------
@@ -57,17 +70,13 @@ PER ACQUISITION, as the original pyXpcsViewer reader did:
     treating a numerically zero error bar as infinitely precise.
   * temperature is the RTD of the stage zone holding the cell.
 
-MONITORS AND TIMES.  The result files carry placeholder ion-chamber readings
-(incident 133.49, transmitted 0 in every file) and the date of the 2025
-rewrite, not of the measurement.  The real values were recovered from the Data
-Exchange archive in October 2026 and are taken from the restore manifests:
-
-    2022-1  ../SAXPCS_8id/dx_restore_manifest.csv       (committed)
-    2021-2  ../SAXPCS_8id/dx_restore_manifest_2021-2.csv (46 MB, local only)
-
-2021-2 never recorded the downstream chamber, so its transmitted value is NaN.
-Section monitors are means over the acquisitions that survived the outlier cut,
-the same acquisitions the curves are averaged over.
+MONITORS AND TIMES come from each result file: the ion-chamber readings and
+the start time that restore_dx_metadata(_2021-2).py recovered from the Data
+Exchange archive into the NeXus metadata in October 2026, before these
+correlations were run.  2021-2 never recorded the downstream chamber, so its
+transmitted value is a placeholder and is stored as NaN.  Section monitors are
+means over the acquisitions that survived the outlier cut, the same
+acquisitions the curves are averaged over.
 
 FIGURE S11 needs one acquisition split into the twelve 8,333-frame subsets the
 correlator stores in /xpcs/temporal_mean/scattering_1d_segments.  The stored
@@ -78,10 +87,10 @@ the ramp).  Each is multiplied back by its mean intensity, read from
 twelve on the scale of the time-averaged I(Q).  The script prints how constant
 that factor is across Q, which tests the description.
 
-    python reduce_gelation.py
+    python reduce_gelation.py              # everything
+    python reduce_gelation.py D029 segments  # just those
 """
 
-import csv
 import glob
 import os
 import sys
@@ -95,25 +104,35 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, '..'))
 from common.utils import average_datasets, outlier_removal       # noqa: E402
 
-ROOT = '/home/8-id-i/2024-3/2024_1228_qz_llps_analysis/2025_08_analysis'
+GDATA = '/gdata/s8id-dmdtn'
+REANALYSIS = '/home/8-id-i/2024-3/2024_1228_qz_llps_analysis/2026_10_gdata_reanalysis'
+SOURCES = {
+    'ramps21': f'{GDATA}/2021-2/babnigg202107_2_nexus/reprocess_results',
+    'ramps22': f'{GDATA}/2022-1/babnigg202203_nexus/reprocess_results',
+    'D029':    f'{REANALYSIS}/2021-2_D029',
+    'part1':   f'{REANALYSIS}/2021-2_B039_part1',
+    'part2':   f'{REANALYSIS}/2021-2_B039_part2',
+}
 OUT_DIR = os.path.join(HERE, 'data')
-MANIFEST_2022_1 = os.path.join(HERE, '..', 'SAXPCS_8id', 'dx_restore_manifest.csv')
-MANIFEST_2021_2 = os.path.join(HERE, '..', 'SAXPCS_8id', 'dx_restore_manifest_2021-2.csv')
 
-# key -> (beamtime, correlation, run, sections, skipped acquisitions, QNW zone)
+INCIDENT = '/entry/instrument/incident_beam/incident_beam_intensity'
+TRANSMITTED = '/entry/instrument/incident_beam/transmitted_beam_intensity'
+START = '/entry/start_time'
+
+# key -> (beamtime, source, run, sections, skipped acquisitions, QNW zone)
 DATASETS = {
-    'B039_n10':        ('2021-2', 'all',   'B039',  10, 0,  1),
-    'B040_n10':        ('2021-2', 'all',   'B040',  10, 0,  1),
-    'T214_n20':        ('2021-2', 'all',   'T214',  20, 0,  1),
-    'T215_n20':        ('2021-2', 'all',   'T215',  20, 0,  1),
-    'D029':            ('2021-2', 'all',   'D029',   1, 0,  2),
-    'E0110_n10':       ('2022-1', 'all',   'E0110', 10, 0,  2),
-    'E0111_n10':       ('2022-1', 'all',   'E0111', 10, 0,  2),
-    'D0138':           ('2022-1', 'all',   'D0138',  1, 0,  2),
-    'B039_n20_skip70': ('2021-2', 'all',   'B039',  20, 70, 1),
-    'E0110_n20':       ('2022-1', 'all',   'E0110', 20, 0,  2),
-    'B039_part1_n10':  ('2021-2', 'part1', 'B039',  10, 0,  1),
-    'B039_part2_n10':  ('2021-2', 'part2', 'B039',  10, 0,  1),
+    'B039_n10':        ('2021-2', 'ramps21', 'B039',  10, 0,  1),
+    'B040_n10':        ('2021-2', 'ramps21', 'B040',  10, 0,  1),
+    'T214_n20':        ('2021-2', 'ramps21', 'T214',  20, 0,  1),
+    'T215_n20':        ('2021-2', 'ramps21', 'T215',  20, 0,  1),
+    'D029':            ('2021-2', 'D029',    'D029',   1, 0,  2),
+    'E0110_n10':       ('2022-1', 'ramps22', 'E0110', 10, 0,  2),
+    'E0111_n10':       ('2022-1', 'ramps22', 'E0111', 10, 0,  2),
+    'D0138':           ('2022-1', 'ramps22', 'D0138',  1, 0,  2),
+    'B039_n20_skip70': ('2021-2', 'ramps21', 'B039',  20, 70, 1),
+    'E0110_n20':       ('2022-1', 'ramps22', 'E0110', 20, 0,  2),
+    'B039_part1_n10':  ('2021-2', 'part1',   'B039',  10, 0,  1),
+    'B039_part2_n10':  ('2021-2', 'part2',   'B039',  10, 0,  1),
 }
 
 # Figure S11: the first and the last acquisition of the (VPAVG)10 heating ramp
@@ -157,14 +176,26 @@ def correct_g2_err(g2_err, threshold=1e-6):
     return out
 
 
+def scalar(hf, path):
+    raw = np.ravel(hf[path][()])[0]
+    return raw.decode() if isinstance(raw, bytes) else raw
+
+
+def seconds(stamp):
+    return datetime.strptime(str(stamp).strip()[:19], '%Y-%m-%d %H:%M:%S').timestamp()
+
+
 def read_one(args):
-    """g2, g2_err, I(Q) and temperature of one acquisition, or None if unreadable."""
-    fname, zone = args
+    """g2, g2_err, I(Q), temperature, incident and transmitted monitor and start
+    time (s) of one acquisition, or None if the file is unreadable."""
+    fname, zone, beam = args
     try:
         with h5py.File(fname, 'r') as hf:
+            trn = float(scalar(hf, TRANSMITTED)) if beam == '2022-1' else np.nan
             return (hf[G2][()], correct_g2_err(hf[G2_ERR][()]),
                     phi_average(hf[SAXS][()], hf)[0],
-                    float(np.ravel(hf[f'/entry/sample/qnw{zone}_temperature'][()])[0]))
+                    float(scalar(hf, f'/entry/sample/qnw{zone}_temperature')),
+                    float(scalar(hf, INCIDENT)), trn, seconds(scalar(hf, START)))
     except (OSError, KeyError) as err:
         print(f'  skipped unreadable {os.path.basename(fname)}: {err}')
         return None
@@ -174,50 +205,23 @@ def acquisition(fname):
     return os.path.basename(fname).replace('_results.hdf', '')
 
 
-def load_monitors():
-    """acquisition -> (incident, transmitted, start time), for both beamtimes."""
-    mon = {}
-    with open(MANIFEST_2022_1) as fh:
-        for row in csv.DictReader(fh):
-            mon[row['acquisition']] = (float(row['incident_beam_intensity']),
-                                       float(row['transmitted_beam_intensity']),
-                                       row['start_time'])
-    # the 2021-2 manifest is one row per (acquisition, field); keep the archive value
-    inc, start = {}, {}
-    with open(MANIFEST_2021_2) as fh:
-        for row in csv.DictReader(fh):
-            if row['field'] == '/entry/instrument/incident_beam/incident_beam_intensity':
-                inc[row['acquisition']] = float(row['archive_value'])
-            elif row['field'] == '/entry/start_time':
-                start[row['acquisition']] = row['archive_value']
-    for acq, val in inc.items():
-        mon[acq] = (val, np.nan, start.get(acq, ''))
-    return mon
-
-
-def seconds(stamp):
-    return datetime.strptime(stamp.strip(), '%Y-%m-%d %H:%M:%S').timestamp()
-
-
-def reduce(key, monitors):
-    beam, corr, run, nsec, skip, zone = DATASETS[key]
-    src = os.path.join(ROOT, beam, f'cluster_results_{corr}')
-    files = sorted(glob.glob(os.path.join(src, f'{run}*.hdf')))[skip:]
+def reduce(key):
+    beam, source, run, nsec, skip, zone = DATASETS[key]
+    src = SOURCES[source]
+    files = sorted(glob.glob(os.path.join(src, f'{run}*_results.hdf')))[skip:]
     assert files, f'no {run} files under {src}'
     with Pool(NUM_CORES) as pool:
-        per_file = pool.map(read_one, [(f, zone) for f in files])
+        per_file = pool.map(read_one, [(f, zone, beam) for f in files])
 
     acq = [acquisition(f) for f in files]
-    temp = np.array([np.nan if r is None else r[3] for r in per_file])
-    inc = np.array([monitors[a][0] for a in acq])
-    trn = np.array([monitors[a][1] for a in acq])
-    t_abs = np.array([seconds(monitors[a][2]) for a in acq])
+    meta = np.array([[np.nan] * 4 if r is None else r[3:] for r in per_file])
+    temp, inc, trn, t_abs = meta.T
     kept = np.zeros(len(files), dtype=bool)
     section = np.zeros(len(files), dtype=int)
 
     out = {k: [] for k in ('g2', 'g2_err', 'saxs_1d', 'T_mean', 'T_min', 'T_max',
                            'n_files', 'n_kept', 'incident', 'transmitted')}
-    print(f'{key}: {run} from {beam}/{corr}, {len(files)} acquisitions after skipping {skip}')
+    print(f'{key}: {run} from {src}, {len(files)} acquisitions after skipping {skip}')
     print('  sec  T-min   T-max   T-mean   kept')
     for s, idx in enumerate(split(np.arange(len(files)), nsec)):
         section[idx] = s
@@ -246,7 +250,7 @@ def reduce(key, monitors):
 
     path = os.path.join(OUT_DIR, f'{key}.h5')
     with h5py.File(path, 'w') as h:
-        h.attrs.update(run=run, beamtime=beam, correlation=corr, n_sections=nsec,
+        h.attrs.update(run=run, beamtime=beam, n_sections=nsec,
                        skipped=skip, qnw_zone=zone, source=src,
                        outlier_cut=f'cross-correlation, lowest {PERCENTILE}% of g2, g2_err, log I(Q)',
                        written_by='reduce_gelation.py')
@@ -262,7 +266,7 @@ def reduce(key, monitors):
             h[f'section/{k}'] = np.array(out[k], dtype=int)
         h['acquisition/name'] = np.array(acq, dtype='S')
         h['acquisition/temperature'] = temp
-        h['acquisition/elapsed_s'] = t_abs - t_abs[0]
+        h['acquisition/elapsed_s'] = t_abs - np.nanmin(t_abs)
         h['acquisition/section'] = section
         h['acquisition/kept'] = kept
         h['acquisition/incident'] = inc
@@ -275,7 +279,7 @@ def reduce(key, monitors):
 
 def segments():
     """Figure S11: the twelve frame subsets of two acquisitions, in photons/pixel/frame."""
-    src = os.path.join(ROOT, '2021-2', 'cluster_results_all')
+    src = SOURCES['ramps21']
     path = os.path.join(OUT_DIR, 'B039_segments.h5')
     with h5py.File(path, 'w') as h:
         h.attrs.update(source=src, written_by='reduce_gelation.py')
@@ -302,13 +306,15 @@ def segments():
     print(f'  -> {os.path.relpath(path, HERE)}\n')
 
 
-def main():
+def main(only=None):
+    """Reduce every dataset and the Figure S11 subsets, or only those named."""
     os.makedirs(OUT_DIR, exist_ok=True)
-    monitors = load_monitors()
     for key in DATASETS:
-        reduce(key, monitors)
-    segments()
+        if not only or key in only:
+            reduce(key)
+    if not only or 'segments' in only:
+        segments()
 
 
 if __name__ == '__main__':
-    main()
+    main(set(sys.argv[1:]) or None)

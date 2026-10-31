@@ -59,11 +59,10 @@ all: figures papers
 figures: $(FIGURES)
 	@echo "all figures up to date"
 
-# Every rule below reads only what is committed and never rebuilds it:
-# analysis/gelation/data/ was written by reduce_gelation.py from the August 2025
-# correlation results, analysis/SAXPCS_8id/data/ by average_ranges.py from the
-# October 2026 reprocessing on /gdata, and SAXS_12id/reduced_data/ by
-# Read_12ID_SAWAXS.py from the 12-ID-B files on /gdata.
+# Every rule below reads only what is committed and never rebuilds it.  The
+# data were reduced on Amber (CLAUDE.md) from /gdata: analysis/gelation/data/ by
+# reduce_gelation.py, analysis/SAXPCS_8id/data/ by average_ranges.py, and
+# SAXS_12id/reduced_data/ by Read_12ID_SAWAXS.py.
 $(F_SAXS): $(GEL)/saxs_scaling.py $(GEL_LIB) $(GUINIER) $(call data,E0110_n10 D0138)
 	cd $(GEL) && $(PY) saxs_scaling.py
 

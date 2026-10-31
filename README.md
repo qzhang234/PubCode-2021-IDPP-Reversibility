@@ -25,25 +25,37 @@ make check      report undefined citations / references / missing figures
 ## Reproducibility
 
 Every figure regenerates from a clone of this repository alone. The reduced
-data are committed, and none of the figure scripts reads beamline storage:
+data are committed, and none of the figure scripts reads beamline storage. Every
+SAXS and XPCS figure traces to `/gdata`, which mounts only on Amber
+(10.54.116.10; see `CLAUDE.md`), where the scripts that read it run:
 
-| Data | Made by | From |
+| Data | Made by, on Amber | From |
 |---|---|---|
-| `analysis/gelation/data/` (4 MB) | `gelation/reduce_gelation.py` | August 2025 correlation results on `/home/8-id-i/2024-3/...` (raw frames on `/gdata`) |
+| `analysis/gelation/data/` (4 MB) | `gelation/reduce_gelation.py` | correlation results of the raw frames on `/gdata`: the October 2026 run in `.../babnigg202107_2_nexus/reprocess_results` and `.../babnigg202203_nexus/reprocess_results`, plus the 2021-2 blank and the B039 half-exposures correlated by `gelation/run_gelation_correlations.sh` |
 | `analysis/SAXPCS_8id/data/` | `SAXPCS_8id/average_ranges.py` | October 2026 reprocessing on `/gdata/s8id-dmdtn/2022-1/` |
 | `analysis/SAXS_12id/reduced_data/` | `SAXS_12id/Read_12ID_SAWAXS.py` | 12-ID-B processed files on `/gdata/s8id-dmdtn/2021-1/` |
-| `analysis/Rad_Dam_Check/cluster_results/` | copied from `Archive/New/` | 2025 flux test, raw on `/gdata/dm/8ID/8IDI/2025-1/` |
+| `analysis/Rad_Dam_Check/cluster_results/` | copied from `Archive/New/` | 2025 flux test; its raw data were archived off `/gdata` by DM |
+
+Checked on Amber on 31 Oct 2026: `Read_12ID_SAWAXS.py` and `average_ranges.py`
+reproduce their committed outputs exactly from `/gdata`. The new correlations
+of `run_gelation_correlations.sh` are written to
+`/home/8-id-i/2024-3/2024_1228_qz_llps_analysis/2026_10_gdata_reanalysis/`,
+beside the August 2025 analysis, not into `/gdata`.
+
+The Overleaf figures were made from an earlier correlation of the same frames
+(the August 2025 reanalysis in `.../2025_08_analysis/`, with placeholder
+monitors). Ported to this repository and pointed at those files, the reduction
+reproduced the original pickles in `Archive/Old/` exactly in g2 and g2_err for
+all eleven datasets (commit 3e5ce76), which is how the port was checked. The
+`/gdata` correlations give the same section averages: identical outlier
+keep-masks, I(Q) within 0.03 %, and g2 at the lowest Q bin, the one every
+figure uses, within 5e-6. g2 differs only in the two dynamic bins (Q = 0.0185
+and 0.0231 A^-1) holding pixels (30, 340) and (63, 166), which the 2021-2 q-map
+of the October run masks; for T214 the change in the second reaches 0.15, so
+that pixel was already misbehaving in July 2021. Every number in the paper is
+unchanged.
 
 `Archive/` is local provenance and is never read by `make`.
-
-`analysis/gelation/reduce_gelation.py` produced `gelation/data/`. It reads the
-per-acquisition correlation results of the August 2025 reanalysis under
-`/home/8-id-i/2024-3/2024_1228_qz_llps_analysis/2025_08_analysis/` and the
-2021-2 restore manifest (`analysis/SAXPCS_8id/dx_restore_manifest_2021-2.csv`,
-46 MB, untracked), so it runs only on an 8-ID machine, and `make` never runs
-it. Its section averages reproduce the original pickles in `Archive/Old/`
-exactly in g2 and g2_err for all eleven datasets, and in I(Q) everywhere except
-the corner Q bins that the original reader corrupted (below).
 
 ## Figures
 
