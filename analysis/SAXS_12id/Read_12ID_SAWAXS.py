@@ -2,11 +2,11 @@
 
 BEAMLINE-ONLY.  ``fn_path`` below points at the 12-ID-B processed directory on
 /gdata, which APS monitors and backs up and which mounts on the 10.x hosts
-(amber) and not on the 164.x analysis machines, so this script runs only there.
-Its outputs are committed under reduced_data/, so reversibility_12id.py
-(Figure S5), Plot_12ID.py and Guinier_Plot.py run from a clone of this
-repository alone and this script does not have to be rerun unless the raw data
-are reprocessed.
+(adamite, amber) and not on the 164.x analysis machines, so this script runs
+only there.  Its outputs are committed under reduced_data/, so
+reversibility_12id.py (Figure S5), Plot_12ID.py and Guinier_Plot.py run from a
+clone of this repository alone and this script does not have to be rerun
+unless the raw data are reprocessed.
 
 For each of the four conditions (Reference / Measurement at 10 and 30 C) it
 reads the SAXS and WAXS .avg profiles, scales WAXS onto SAXS by the ratio of

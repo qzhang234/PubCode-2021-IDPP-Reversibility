@@ -9,7 +9,12 @@ coefficient formula.
 
 PROVENANCE: worked out originally in two beamline notebooks, IC_pind4_convert
 and Abs_Scatt_Cross, which are not part of this repository.  The code below is
-the authoritative implementation and reproduces their numbers.
+the authoritative implementation and reproduces their numbers.  Neither
+notebook, nor the eight calibration points below, is on /gdata.  The one copy
+of the calibration there, /gdata/s8id-dmdtn/2022-1/weichen202203/AnalysisScript/
+Abs_Scatt_Cross.py (June 2022), applies F = 6.25e4 * Up_IC / t_exp - 1.28e7 and
+T = Dn_IC / Up_IC / 0.868: CAL_A, CAL_B and AIR_TRANSMISSION below (6.247e4,
+-1.278e7, 0.8679) to the digits it gives.
 
 GOAL.  Turn the azimuthally averaged I(Q), in photons per pixel per frame, into
 an absolute differential cross section with the buffer subtracted:

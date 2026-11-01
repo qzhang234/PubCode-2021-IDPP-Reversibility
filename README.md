@@ -26,21 +26,39 @@ make check      report undefined citations / references / missing figures
 
 Every figure regenerates from a clone of this repository alone. The reduced
 data are committed, and none of the figure scripts reads beamline storage. Every
-SAXS and XPCS figure traces to `/gdata`, which mounts only on Amber
-(10.54.116.10; see `CLAUDE.md`), where the scripts that read it run:
+input of the reduction is on `/gdata/s8id-dmdtn`, which mounts only on the
+beamline hosts Adamite and Amber (see `CLAUDE.md`), where the scripts that read
+it run; nothing is read from `/home/8-id-i`:
 
-| Data | Made by, on Amber | From |
+| Data | Made by | From `/gdata/s8id-dmdtn/` |
 |---|---|---|
-| `analysis/gelation/data/` (4 MB) | `gelation/reduce_gelation.py` | correlation results of the raw frames on `/gdata`: the October 2026 run in `.../babnigg202107_2_nexus/reprocess_results` and `.../babnigg202203_nexus/reprocess_results`, plus the 2021-2 blank and the B039 half-exposures correlated by `gelation/run_gelation_correlations.sh` |
-| `analysis/SAXPCS_8id/data/` | `SAXPCS_8id/average_ranges.py` | October 2026 reprocessing on `/gdata/s8id-dmdtn/2022-1/` |
-| `analysis/SAXS_12id/reduced_data/` | `SAXS_12id/Read_12ID_SAWAXS.py` | 12-ID-B processed files on `/gdata/s8id-dmdtn/2021-1/` |
-| `analysis/Rad_Dam_Check/cluster_results/` | copied from `Archive/New/` | 2025 flux test; its raw data were archived off `/gdata` by DM |
+| `analysis/gelation/data/` (4 MB) | `gelation/reduce_gelation.py` | correlation results of the raw frames: the October 2026 run in `2021-2/babnigg202107_2_nexus/reprocess_results` and `2022-1/babnigg202203_nexus/reprocess_results`, and, correlated by `gelation/run_gelation_correlations.sh` into the same 2021-2 tree, the water blank D029 (`reprocess_results`) and the B039 half-exposures (`reprocess_results_part1`, `_part2`) |
+| `analysis/SAXPCS_8id/data/` | `SAXPCS_8id/average_ranges.py` | October 2026 reprocessing in `2022-1/` |
+| `analysis/SAXS_12id/reduced_data/` | `SAXS_12id/Read_12ID_SAWAXS.py` | 12-ID-B processed files in `2021-1/` |
+| `analysis/Rad_Dam_Check/data/` | `Rad_Dam_Check/reduce_flux_control.py` | the beamline's Multitau results of the 2025 flux test, copied to `2025-1/qzhang202503/Multitau`; its raw frames were archived off `/gdata` by DM |
 
-Checked on Amber on 31 Oct 2026: `Read_12ID_SAWAXS.py` and `average_ranges.py`
-reproduce their committed outputs exactly from `/gdata`. The new correlations
-of `run_gelation_correlations.sh` are written to
-`/home/8-id-i/2024-3/2024_1228_qz_llps_analysis/2026_10_gdata_reanalysis/`,
-beside the August 2025 analysis, not into `/gdata`.
+Checked on 31 Oct and again on 1 Nov 2026: `Read_12ID_SAWAXS.py` and
+`average_ranges.py` reproduce their committed outputs byte for byte from
+`/gdata`. On 1 Nov `reduce_gelation.py` did the same for the ten datasets of
+the October correlation and the S11 subsets. The water blank and the
+half-exposures, re-correlated into `/gdata` that day, reduce to the same
+section averages as an earlier correlation of the same frames: identical
+keep-masks, I(Q) within 2e-8 and g2 within 3e-5, except in the Q bin at
+0.0185 A^-1 holding the cleared pixel (30, 340). There repeated correlations
+differ by up to 5e-3 (0.6 sigma), and no figure uses that bin.
+
+The flux test (Figure S13) is the one dataset that could not be re-correlated.
+The Overleaf figure used a later correlation against a q-map whose mask removes
+a few bad pixels, and those results are not on `/gdata`. The beamline's results
+keep them, so `reduce_flux_control.py` re-averages I(Q) from the stored mean
+image without the hot pixels and drops the one-frame delay of g2, which those
+pixels spoil. The result agrees with the Overleaf version bin for bin within
+4 % in I(Q), and within 0.023 in g2 from the second delay on; the beamline
+q-map puts Q 1.3 % higher.
+The flux in its legend also uses `Pind_calibration.csv`, the beamline's table of
+upstream ion chamber against calibrated PIN diode by attenuator setting. It is
+a calibration sheet rather than measurement data, is not on `/gdata`, and is
+kept with the PIN-diode certificate in `analysis/Rad_Dam_Check/`.
 
 The Overleaf figures were made from an earlier correlation of the same frames
 (the August 2025 reanalysis in `.../2025_08_analysis/`, with placeholder
@@ -105,6 +123,10 @@ Each change is explained in the docstring of the script that makes it.
   where the original stopped.
 * **Units.** Q is in A^-1 and g2 is labelled with the actual bin, 0.0038 A^-1
   (the original read 0.03 nm^-1).
+* **Figure S13.** Made from the beamline's correlation on `/gdata`, not the
+  later one the original used: hot pixels are left out of I(Q), g2 starts at
+  the second delay, and Q is 1.3 % higher (see Reproducibility above). The
+  fluxes in the legend are unchanged.
 
 ## Samples
 

@@ -70,8 +70,9 @@ from common.utils import outlier_removal, average_datasets
 
 # --- PARAMETERS ---
 # BEAMLINE-ONLY: the raw reprocessed NeXus results.  /gdata is mounted on the
-# 10.x hosts (amber) and not on the 164.x analysis machines, so this script has
-# to run there; every other 8-ID-I script reads only the data/ folder it writes.
+# 10.x hosts (adamite, amber) and not on the 164.x analysis machines, so this
+# script has to run there; every other 8-ID-I script reads only the data/ folder
+# it writes.
 #
 # The ion chambers, the ring current and the acquisition timestamps in this
 # tree were restored from the 2022 Data Exchange archive by

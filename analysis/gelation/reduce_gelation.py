@@ -1,20 +1,24 @@
 """Reduce the 8-ID-I temperature ramps behind the gelation figures into data/.
 
-READS /gdata, SO IT RUNS ON AMBER (10.54.116.10; see CLAUDE.md).  Its input is
-the per-acquisition correlation results, one HDF file per 2 s acquisition,
-all correlated from the raw frames on /gdata, against one q-map per beamtime:
-babnigg202107_2_nexus_Sq270_Dq27_Sphi8_Dphi1_q0p0032_Lin_2_BadPixRm.hdf for
-2021-2 and babnigg202203_nexus_Sq270_Dq27_Sphi8_Dphi1_Q0p0032_Lin.hdf for 2022-1:
+READS /gdata, SO IT RUNS ON ADAMITE (10.54.116.17; see CLAUDE.md).  Its input is
+the per-acquisition correlation results, one HDF file per 2 s acquisition, all
+on /gdata/s8id-dmdtn and all correlated there from the raw frames, against one
+q-map per beamtime: babnigg202107_2_nexus_Sq270_Dq27_Sphi8_Dphi1_q0p0032_Lin_2_
+BadPixRm.hdf for 2021-2 and babnigg202203_nexus_Sq270_Dq27_Sphi8_Dphi1_Q0p0032_
+Lin.hdf for 2022-1.  Nothing is read from /home/8-id-i.
 
-    /gdata/s8id-dmdtn/2021-2/babnigg202107_2_nexus/reprocess_results
-    /gdata/s8id-dmdtn/2022-1/babnigg202203_nexus/reprocess_results
-        the October 2026 correlation of every acquisition of the ramps and of
-        the 2022-1 buffer, all 100,000 frames;
-    /home/8-id-i/2024-3/2024_1228_qz_llps_analysis/2026_10_gdata_reanalysis/
-        2021-2_D029, 2021-2_B039_part1, 2021-2_B039_part2
-        what the October run left out -- the 2021-2 water blank, and B039
-        correlated over frames 0-49,999 and 50,000-99,999 -- correlated on
-        Amber by run_gelation_correlations.sh with the same settings.
+    /gdata/s8id-dmdtn/2021-2/babnigg202107_2_nexus/
+        reprocess_results         all 100,000 frames: the six ramps (the
+                                  October 2026 run) and the water blank D029
+        reprocess_results_part1   B039, frames 0-49,999
+        reprocess_results_part2   B039, frames 50,000-99,999
+    /gdata/s8id-dmdtn/2022-1/babnigg202203_nexus/
+        reprocess_results         all 100,000 frames: the ramps and the buffer
+                                  (October 2026)
+
+The blank and the two halves, which the October run left out, were correlated
+by run_gelation_correlations.sh with the same settings, on Amber and Adamite
+(1 Nov 2026).
 
 Every figure script reads only what this writes into data/, so `make figures`
 never runs it.
@@ -105,13 +109,11 @@ sys.path.insert(0, os.path.join(HERE, '..'))
 from common.utils import average_datasets, outlier_removal       # noqa: E402
 
 GDATA = '/gdata/s8id-dmdtn'
-REANALYSIS = '/home/8-id-i/2024-3/2024_1228_qz_llps_analysis/2026_10_gdata_reanalysis'
 SOURCES = {
-    'ramps21': f'{GDATA}/2021-2/babnigg202107_2_nexus/reprocess_results',
-    'ramps22': f'{GDATA}/2022-1/babnigg202203_nexus/reprocess_results',
-    'D029':    f'{REANALYSIS}/2021-2_D029',
-    'part1':   f'{REANALYSIS}/2021-2_B039_part1',
-    'part2':   f'{REANALYSIS}/2021-2_B039_part2',
+    'full21': f'{GDATA}/2021-2/babnigg202107_2_nexus/reprocess_results',
+    'part1':  f'{GDATA}/2021-2/babnigg202107_2_nexus/reprocess_results_part1',
+    'part2':  f'{GDATA}/2021-2/babnigg202107_2_nexus/reprocess_results_part2',
+    'full22': f'{GDATA}/2022-1/babnigg202203_nexus/reprocess_results',
 }
 OUT_DIR = os.path.join(HERE, 'data')
 
@@ -121,16 +123,16 @@ START = '/entry/start_time'
 
 # key -> (beamtime, source, run, sections, skipped acquisitions, QNW zone)
 DATASETS = {
-    'B039_n10':        ('2021-2', 'ramps21', 'B039',  10, 0,  1),
-    'B040_n10':        ('2021-2', 'ramps21', 'B040',  10, 0,  1),
-    'T214_n20':        ('2021-2', 'ramps21', 'T214',  20, 0,  1),
-    'T215_n20':        ('2021-2', 'ramps21', 'T215',  20, 0,  1),
-    'D029':            ('2021-2', 'D029',    'D029',   1, 0,  2),
-    'E0110_n10':       ('2022-1', 'ramps22', 'E0110', 10, 0,  2),
-    'E0111_n10':       ('2022-1', 'ramps22', 'E0111', 10, 0,  2),
-    'D0138':           ('2022-1', 'ramps22', 'D0138',  1, 0,  2),
-    'B039_n20_skip70': ('2021-2', 'ramps21', 'B039',  20, 70, 1),
-    'E0110_n20':       ('2022-1', 'ramps22', 'E0110', 20, 0,  2),
+    'B039_n10':        ('2021-2', 'full21',  'B039',  10, 0,  1),
+    'B040_n10':        ('2021-2', 'full21',  'B040',  10, 0,  1),
+    'T214_n20':        ('2021-2', 'full21',  'T214',  20, 0,  1),
+    'T215_n20':        ('2021-2', 'full21',  'T215',  20, 0,  1),
+    'D029':            ('2021-2', 'full21',  'D029',   1, 0,  2),
+    'E0110_n10':       ('2022-1', 'full22',  'E0110', 10, 0,  2),
+    'E0111_n10':       ('2022-1', 'full22',  'E0111', 10, 0,  2),
+    'D0138':           ('2022-1', 'full22',  'D0138',  1, 0,  2),
+    'B039_n20_skip70': ('2021-2', 'full21',  'B039',  20, 70, 1),
+    'E0110_n20':       ('2022-1', 'full22',  'E0110', 20, 0,  2),
     'B039_part1_n10':  ('2021-2', 'part1',   'B039',  10, 0,  1),
     'B039_part2_n10':  ('2021-2', 'part2',   'B039',  10, 0,  1),
 }
@@ -279,7 +281,7 @@ def reduce(key):
 
 def segments():
     """Figure S11: the twelve frame subsets of two acquisitions, in photons/pixel/frame."""
-    src = SOURCES['ramps21']
+    src = SOURCES['full21']
     path = os.path.join(OUT_DIR, 'B039_segments.h5')
     with h5py.File(path, 'w') as h:
         h.attrs.update(source=src, written_by='reduce_gelation.py')

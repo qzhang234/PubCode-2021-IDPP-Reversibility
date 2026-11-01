@@ -60,9 +60,10 @@ figures: $(FIGURES)
 	@echo "all figures up to date"
 
 # Every rule below reads only what is committed and never rebuilds it.  The
-# data were reduced on Amber (CLAUDE.md) from /gdata: analysis/gelation/data/ by
-# reduce_gelation.py, analysis/SAXPCS_8id/data/ by average_ranges.py, and
-# SAXS_12id/reduced_data/ by Read_12ID_SAWAXS.py.
+# data were reduced on the /gdata hosts (CLAUDE.md) from /gdata/s8id-dmdtn alone:
+# analysis/gelation/data/ by reduce_gelation.py, analysis/SAXPCS_8id/data/ by
+# average_ranges.py, SAXS_12id/reduced_data/ by Read_12ID_SAWAXS.py, and
+# Rad_Dam_Check/data/ by reduce_flux_control.py.
 $(F_SAXS): $(GEL)/saxs_scaling.py $(GEL_LIB) $(GUINIER) $(call data,E0110_n10 D0138)
 	cd $(GEL) && $(PY) saxs_scaling.py
 
@@ -93,7 +94,7 @@ $(F_STAB) &: $(GEL)/stability_si.py $(GEL_LIB) \
 	cd $(GEL) && $(PY) stability_si.py
 
 $(F_FLUX): $(RAD)/flux_control.py $(RAD)/Pind_calibration.csv \
-           $(wildcard $(RAD)/cluster_results/*.hdf) $(STYLE)
+           $(RAD)/data/flux_control.h5 $(STYLE)
 	cd $(RAD) && $(PY) flux_control.py
 
 # --- the 28 Oct 2026 version of main.tex ----------------------------------------

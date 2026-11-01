@@ -3,7 +3,9 @@
 After the Overleaf Figure S12, and the same figure the companion repository
 draws (PubCode-2021-IDPP, analysis/Rad_Dam_Check/g2_SAXPCS_Rad_Cali.py).  A
 20 mg/mL (VPAVG)30 sample, measured after the APS Upgrade at four attenuator
-settings, E0171-E0174 in cluster_results/.
+settings, E0171-E0174.  Reads data/flux_control.h5, which reduce_flux_control.py
+writes from the beamline's correlation results on /gdata; how those
+differ from the correlation behind the Overleaf figure is in its docstring.
 
 The legend gives the photon flux on the sample, recovered for each measurement
 from its upstream ion-chamber reading, because the nominal attenuator settings
@@ -29,14 +31,10 @@ from common.acs_style import (DOUBLE_COL, MS, MEW, LW_THIN,                  # n
                               apply_style, add_minor_grid, label_panels,
                               q_log_ticks, save_fig)
 
-DATA = os.path.join(HERE, 'cluster_results')
-FILES = {'a7':  'E0174_H06-c6c5-4_a0007_f100000_r00001_results.hdf',
-         'a9':  'E0173_H06-c6c5-4_a0009_f100000_r00001_results.hdf',
-         'a11': 'E0172_H06-c6c5-4_a0011_f100000_r00001_results.hdf',
-         'a14': 'E0171_H06-c6c5-4_a0014_f100000_r00001_results.hdf'}
+DATA = os.path.join(HERE, 'data', 'flux_control.h5')
 COLORS = {'a7': 'C0', 'a9': 'C1', 'a11': 'C2', 'a14': 'C3'}
 MARKERS = {'a7': 'o', 'a9': 's', 'a11': '^', 'a14': 'D'}
-IC_PATH, IC_SCALE = 'entry/instrument/incident_beam/incident_beam_intensity', 1e-9
+IC_SCALE = 1e-9                           # ion-chamber readout -> A
 
 # Flux_Cal.py, without its attenuation-ratio factor: the IC reading here already
 # corresponds to the attenuated beam on the sample.
@@ -63,18 +61,14 @@ def ic_to_pind_slope():
 
 slope = ic_to_pind_slope()
 data = {}
-for key, name in FILES.items():
-    with h5py.File(os.path.join(DATA, name), 'r') as hf:
-        ic = float(np.ravel(hf[IC_PATH][()])[0]) * IC_SCALE
-        t0 = float(np.ravel(hf['entry/instrument/detector_1/frame_time'][()])[0])
-        data[key] = dict(flux=pind_to_flux(slope * ic),
-                         q=hf['xpcs/qmap/static_v_list_dim0'][()],
-                         I=np.squeeze(hf['xpcs/temporal_mean/scattering_1d'][()]),
-                         tau=np.ravel(hf['xpcs/multitau/delay_list'][()]) * t0,
-                         g2=hf['xpcs/multitau/normalized_g2'][()][:, 0],
-                         g2_err=hf['xpcs/multitau/normalized_g2_err'][()][:, 0],
-                         q_dyn=hf['xpcs/qmap/dynamic_v_list_dim0'][()][0])
-    print(f"{key:>4}: IC {ic:.3e} A -> flux {data[key]['flux']:.2e} ph/s")
+with h5py.File(DATA, 'r') as h:
+    for key in COLORS:
+        g = h[key]
+        ic = g.attrs['ic_readout'] * IC_SCALE
+        data[key] = dict(flux=pind_to_flux(slope * ic), q=g['q_static'][()], I=g['saxs_1d'][()],
+                         tau=g['tau'][()], g2=g['g2'][:, 0], g2_err=g['g2_err'][:, 0],
+                         q_dyn=g['q_dynamic'][0])
+        print(f"{key:>4}: IC {ic:.3e} A -> flux {data[key]['flux']:.2e} ph/s")
 
 
 def flux_label(f):
@@ -84,7 +78,7 @@ def flux_label(f):
 
 apply_style()
 fig, axs = plt.subplots(1, 2, figsize=(DOUBLE_COL, 2.9))
-for key in sorted(FILES, key=lambda k: data[k]['flux']):      # key in order of flux
+for key in sorted(data, key=lambda k: data[k]['flux']):       # key in order of flux
     d, c, m = data[key], COLORS[key], MARKERS[key]
     axs[0].plot(d['q'], d['I'], ls='none', marker=m, mfc='none', mec=c, mew=MEW, ms=MS,
                 label=flux_label(d['flux']))

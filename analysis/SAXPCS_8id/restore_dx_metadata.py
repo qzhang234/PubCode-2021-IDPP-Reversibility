@@ -1,8 +1,8 @@
 """Restore into the NeXus tree the measured values the 2025 rewrite dropped.
 
 BEAMLINE-ONLY.  This script has to see /gdata, which is mounted on the 10.x
-hosts (amber) and not on the 164.x analysis machines, so it cannot run from a
-clone of the repository.  It is kept here for provenance: it documents exactly
+hosts (adamite, amber) and not on the 164.x analysis machines, so it cannot run
+from a clone of the repository.  It is kept here for provenance: it documents exactly
 how the data the figures are built from came to be what they are.
 
 WHY IT EXISTS
